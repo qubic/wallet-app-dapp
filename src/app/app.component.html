@@ -195,7 +195,7 @@
       <input type="button" value="Request accounts" (click)="reqAccounts()" />
 
       <h2>Send $Qubic</h2>
-      <span class="method-name">method: sendQubic</span>
+      <span class="method-name">method: qubic_sendQubic</span>
       <label>From</label>
       <input type="text" [(ngModel)]="sendFrom" />
 
@@ -207,6 +207,37 @@
       <input type="text" [(ngModel)]="sendTo" />
       <br />
       <input type="button" value="Send qubic" (click)="sendQubic()" />
+
+      <h2>Sign transaction $Qubic</h2>
+      <span class="method-name">method: qubic_signTransaction</span>
+      <label>From</label>
+      <input type="text" [(ngModel)]="sendFrom" />
+      <br />
+      Amount
+      <input type="text" [(ngModel)]="sendAmount" />
+      <br />
+      To
+      <input type="text" [(ngModel)]="sendTo" />
+      Tick
+      <input type="text" [(ngModel)]="tick" />
+      <br />
+      <input
+        type="button"
+        value="Sign Transaction"
+        (click)="signTransaction()"
+      />
+
+      <h2>Sign message</h2>
+      <label>Sign from</label>
+      <input type="text" [(ngModel)]="signFrom" />
+      <label>Sign message</label>
+      <br />
+      <textarea
+        [(ngModel)]="signMessageString"
+        style="resize: vertical; width: 100%"
+      ></textarea>
+      <br />
+      <input type="button" value="Sign message" (click)="signMessage()" />
     </div>
 
     <div class="right-side" style="flex: 1; margin-left: 24px">

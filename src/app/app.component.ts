@@ -26,6 +26,10 @@ export class AppComponent {
   public sendFrom = '';
   public sendAmount = '';
   public sendTo = '';
+  public tick = 0;
+
+  public signFrom = '';
+  public signMessageString = '';
 
   private signClient: any;
   private approval: any;
@@ -38,14 +42,15 @@ export class AppComponent {
       // Provide the namespaces
       requiredNamespaces: {
         'qubic:main': {
-          methods: ['wallet_requestAccounts', 'sendQubic', 'sendAsset'],
-          // Provide the session events that you wish to listen
-          events: [
-            'amountChanged',
-            'tokenAmountChanged',
-            'accountsChanged',
-            'methodResult',
+          methods: [
+            'wallet_requestAccounts',
+            'qubic_sendQubic',
+            'qubic_sendAsset',
+            'qubic_signTransaction',
+            'qubic_sign',
           ],
+          // Provide the session events that you wish to listen
+          events: ['amountChanged', 'tokenAmountChanged', 'accountsChanged'],
         },
       },
     });
@@ -88,6 +93,8 @@ export class AppComponent {
         params: [],
       },
     });
+    this.logConsole('Requested accounts:');
+    this.logConsole(JSON.stringify(result));
   }
 
   public async reqTick() {
@@ -103,19 +110,75 @@ export class AppComponent {
 
   //Requests accounts from wallet
   public async sendQubic() {
-    const result = await this.signClient.request({
-      topic: this.sessionTopic,
-      chainId: this.chainId,
-      request: {
-        method: 'sendQubic',
-        params: {
-          fromID: this.sendFrom,
-          toID: this.sendTo,
-          amount: this.sendAmount,
-          nonce: new Date().getTime() + '',
+    try {
+      const result = await this.signClient.request({
+        topic: this.sessionTopic,
+        chainId: this.chainId,
+        request: {
+          method: 'qubic_sendQubic',
+          params: {
+            fromID: this.sendFrom,
+            toID: this.sendTo,
+            amount: this.sendAmount,
+            nonce: new Date().getTime() + '',
+          },
         },
-      },
-    });
+      });
+      this.logConsole('Result:');
+      this.logConsole(JSON.stringify(result));
+    } catch (e) {
+      this.logConsole('Error: ' + e);
+    }
+    //this.logConsole('SendQubic result:');
+    //this.logConsole(JSON.stringify(result));
+  }
+
+  //Requests accounts from wallet
+  public async signTransaction() {
+    try {
+      const result = await this.signClient.request({
+        topic: this.sessionTopic,
+        chainId: this.chainId,
+        request: {
+          method: 'qubic_signTransaction',
+          params: {
+            fromID: this.sendFrom,
+            toID: this.sendTo,
+            amount: this.sendAmount,
+            nonce: new Date().getTime() + '',
+          },
+        },
+      });
+      this.logConsole('Result:');
+      this.logConsole(JSON.stringify(result));
+    } catch (e) {
+      this.logConsole('Error: ' + e);
+    }
+    //this.logConsole('SendQubic result:');
+    //this.logConsole(JSON.stringify(result));
+  }
+
+  //Requests accounts from wallet
+  public async signMessage() {
+    try {
+      const result = await this.signClient.request({
+        topic: this.sessionTopic,
+        chainId: this.chainId,
+        request: {
+          method: 'qubic_sign',
+          params: {
+            fromID: this.signFrom,
+            message: this.signMessageString,
+          },
+        },
+      });
+      this.logConsole('Result:');
+      this.logConsole(JSON.stringify(result));
+    } catch (e) {
+      this.logConsole('Error: ' + e);
+    }
+    //this.logConsole('SendQubic result:');
+    //this.logConsole(JSON.stringify(result));
   }
 
   constructor() {
