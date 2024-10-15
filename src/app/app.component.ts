@@ -43,6 +43,7 @@ export class AppComponent {
       requiredNamespaces: {
         'qubic:main': {
           methods: [
+            // Provide the methods that you wish to call
             'wallet_requestAccounts',
             'qubic_sendQubic',
             'qubic_sendAsset',
@@ -127,10 +128,9 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Error: ' + e);
+      this.logConsole('Error: ');
+      this.logConsole(JSON.stringify(e));
     }
-    //this.logConsole('SendQubic result:');
-    //this.logConsole(JSON.stringify(result));
   }
 
   //Requests accounts from wallet
@@ -145,6 +145,7 @@ export class AppComponent {
             fromID: this.sendFrom,
             toID: this.sendTo,
             amount: this.sendAmount,
+            tick: this.tick,
             nonce: new Date().getTime() + '',
           },
         },
@@ -152,10 +153,9 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Error: ' + e);
+      this.logConsole('Error: ');
+      this.logConsole(JSON.stringify(e));
     }
-    //this.logConsole('SendQubic result:');
-    //this.logConsole(JSON.stringify(result));
   }
 
   //Requests accounts from wallet
@@ -175,10 +175,9 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Error: ' + e);
+      this.logConsole('Error: ');
+      this.logConsole(JSON.stringify(e));
     }
-    //this.logConsole('SendQubic result:');
-    //this.logConsole(JSON.stringify(result));
   }
 
   constructor() {

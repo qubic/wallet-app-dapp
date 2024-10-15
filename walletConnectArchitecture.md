@@ -30,11 +30,18 @@ Once accepted, the connection is established as a session. The session can be ac
 
 Requests all accounts in wallet.
 Method parameters: _None_
-Receives an _accountsChanged_ event with all the accounts in wallet
 
-### sendQubic
+On success, an array of `RequestAccountsResult` is objects is received:
 
-Asks the user to send Qubic to a specific address
+| Property | Type   | Value                                 |
+| -------- | ------ | ------------------------------------- |
+| address  | String | The public ID of the account          |
+| name     | String | The name of the account in the wallet |
+| amount   | number | The number of Qubic in the wallet     |
+
+### qubic_sendQubic
+
+Asks the wallet to send Qubic to a specific address (upon confirmation of the user)
 
 Method parameters:
 |Param |Type | Info
@@ -42,16 +49,33 @@ Method parameters:
 |fromID | String | The ID to send Qubic from |
 |toID | String |The ID to send Qubic to |
 |amount| int| The number of Qubic to send|
-|nonce| string| A single use value to identify the request
 
-On error, a _methodResult_ event is received:
-`{"nonce":"1727074222481","error":"Invalid argument(s): fromID and toID are the same","success":false}`
-or
-`{"nonce":"1727074351852","error":"user rejected","success":false}`
+On success, an `ApproveTokenTransferResult` object is received:
+|Property| Type | Value |
+|--|--|
+|tick| Number | The tick that the transfer was scheduled for |
 
-On success a "methodResult" event is received:
-`{nonce":"1727074374562","success":true,"data":{"tick":16051219}}`
-_The tick field contains the tick where the transfer was scheduled for_
+On error a standard `JsonRpcError` is received. Its the `errorMessage` property for details
+
+### qubic_signTransaction
+
+Asks the wallet sign a transaction. The signed value can be used with Qubic RPC to send Qubic to a specific address
+
+Method parameters:
+|Param |Type | Info
+|--|--|--|
+|fromID | String | The ID to send Qubic from |
+|toID | String |The ID to send Qubic to |
+|amount| int| The number of Qubic to send|
+|tick| int (optional) | If defined, indicates the tick for the transaction. Otherwise the transaction will be signed for CurrentTick + 5 |
+
+On success, an `ApproveSignTransactionResult` object is received:
+|Property| Type | Value |
+|--|--|
+|signedTransaction| String | The signed transaction payload
+|tick| Number | The tick that the transfer was signed for |
+
+On error a standard `JsonRpcError` is received. Its the `errorMessage` property for details
 
 ### sendAsset
 
