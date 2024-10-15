@@ -80,21 +80,31 @@ export class AppComponent {
   public handleSessionConnected(sessionInfo: any) {
     this.logConsole('Connected. Topic is ' + sessionInfo.topic);
     this.sessionTopic = sessionInfo.topic;
+    localStorage.setItem('sessionTopic', this.sessionTopic);
     console.log('Session connected', sessionInfo);
   }
 
   //Requests accounts from wallet
   public async reqAccounts() {
-    const result = await this.signClient.request({
-      topic: this.sessionTopic,
-      chainId: this.chainId,
-      request: {
-        method: 'wallet_requestAccounts',
-        params: [],
-      },
-    });
-    this.logConsole('Requested accounts:');
-    this.logConsole(JSON.stringify(result));
+    if (!this.checkSessionStatus()) {
+      this.logConsole('Cannot request accounts. No active session.');
+      return;
+    }
+    try {
+      const result = await this.signClient.request({
+        topic: this.sessionTopic,
+        chainId: this.chainId,
+        request: {
+          method: 'wallet_requestAccounts',
+          params: [],
+        },
+      });
+      this.logConsole('Requested accounts:');
+      this.logConsole(JSON.stringify(result));
+      console.log(result)
+    } catch (error) {
+      this.logConsole('Failed to request accounts');
+    }
   }
 
   public async reqTick() {
@@ -181,6 +191,37 @@ export class AppComponent {
     //this.logConsole(JSON.stringify(result));
   }
 
+  public checkSessionStatus(): boolean {
+    if (!this.sessionTopic) {
+      this.logConsole('No session topic is set.');
+      return false;
+    }
+
+    const session = this.signClient.session.get(this.sessionTopic);
+    if (session) {
+      const expiryTimeMs = session.expiry * 1000;
+      if (expiryTimeMs > Date.now()) {
+        // Session is valid
+        this.logConsole('Session is still connected and valid.');
+        return true;
+      } else {
+        // Session has expired
+        this.logConsole('Session has expired.');
+        this.sessionTopic = '';
+        localStorage.removeItem('sessionTopic');
+        return false;
+      }
+    } else {
+      // Session does not exist
+      this.logConsole('Session is not connected.');
+      // Clean up session data
+      this.sessionTopic = '';
+      localStorage.removeItem('sessionTopic');
+      // Optionally, prompt the user to reconnect
+      return false;
+    }
+  }
+
   constructor() {
     this.logConsole('Initializing Wallet Connect Client');
 
@@ -194,7 +235,25 @@ export class AppComponent {
       },
     }).then((value) => {
       this.signClient = value;
-      this.logConsole('Initialized');
+      this.logConsole('Initialized ' + this.signClient);
+
+      const storedSessionTopic = localStorage.getItem('sessionTopic');
+      const sessions = this.signClient.session.getAll();
+
+      if (storedSessionTopic && sessions.length > 0) {
+        // find the session with the stored topic
+        const session = sessions.find(
+          (s) => s.topic === storedSessionTopic
+        );
+        if (session) {
+          this.logConsole('Restored session from local storage');
+          this.handleSessionConnected(session);
+        } else {
+          // if the session is not found, remove the invalid topic
+          localStorage.removeItem('sessionTopic');
+        }
+      }
+
 
       this.signClient.on('session_proposal', async (payload) => {
         this.logConsole('Session proposal received');
@@ -215,10 +274,16 @@ export class AppComponent {
       this.signClient.on('session_delete', async (payload) => {
         this.logConsole('Session delete received');
         console.log('Session delete', payload);
+        this.sessionTopic = '';
+        localStorage.removeItem('sessionTopic');
+
       });
       this.signClient.on('session_expire', async (payload) => {
         this.logConsole('Session expire received');
         console.log('Session expire', payload);
+        this.sessionTopic = '';
+        localStorage.removeItem('sessionTopic');
+
       });
       this.signClient.on('session_request', async (payload) => {
         this.logConsole('Session request received');
