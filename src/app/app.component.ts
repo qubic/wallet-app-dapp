@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SignClient } from '@walletconnect/sign-client';
+import QRCode from 'qrcode';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +38,28 @@ export class AppComponent {
     this.myConsole += string + '\n';
   }
 
+  private clearConsole() {
+    this.myConsole = '';
+  }
+
+  // Function to generate the QR code and update the img tag's src
+  generateQRCode = async (text: string) => {
+    try {
+      // Generate QR code as a data URL (base64 image)
+      const qrCodeDataURL = await QRCode.toDataURL(text);
+
+      // Update the img tag src attribute with the generated QR code
+      const imgElement = document.getElementById('qrCodeImage') as HTMLImageElement;
+      if (imgElement) {
+        imgElement.src = qrCodeDataURL; // Set the src attribute to the base64 QR code data
+      }
+
+      console.log('QR code generated and applied to img tag.');
+    } catch (err) {
+      console.error('Failed to generate QR code', err);
+    }
+  };
+
   public async genUrl() {
     const { uri, approval } = await this.signClient.connect({
       // Provide the namespaces
@@ -48,7 +71,7 @@ export class AppComponent {
             'qubic_sendQubic',
             'qubic_sendAsset',
             'qubic_signTransaction',
-            'qubic_sign',
+            'qubic_sign'
           ],
           // Provide the session events that you wish to listen
           events: ['amountChanged', 'tokenAmountChanged', 'accountsChanged'],
@@ -57,6 +80,7 @@ export class AppComponent {
     });
     this.logConsole('Generated URL: ' + uri);
     this.connectionURL = uri;
+    this.generateQRCode(uri);
 
     this.logConsole('Awaiting for approval (click once)');
     try {
@@ -221,6 +245,10 @@ export class AppComponent {
     }
   }
 
+  public async clear() {
+    this.clearConsole();
+  }
+
   constructor() {
     this.logConsole('Initializing Wallet Connect Client');
 
@@ -320,4 +348,5 @@ export class AppComponent {
       });
     });
   }
+
 }
