@@ -249,6 +249,30 @@ export class AppComponent {
     this.clearConsole();
   }
 
+  public async logout() {
+    try {
+
+      if (!this.sessionTopic) {
+        this.logConsole('sessionTopic is empty');
+        return;
+      }
+
+      this.logConsole('App will call disconnect');
+
+      await this.signClient.disconnect({
+        topic: this.sessionTopic,
+        reason: { code: 6000, message: 'User logged out' }
+      });
+
+      // Optionally clear local storage or session data
+      localStorage.removeItem('walletconnect');
+      this.logConsole('Successfully logged out');
+    } catch (error: any) {
+      this.logConsole('Failed to log out:');
+      this.logConsole(error);
+    }
+  }
+
   constructor() {
     this.logConsole('Initializing Wallet Connect Client');
 

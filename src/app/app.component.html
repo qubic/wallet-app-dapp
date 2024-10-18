@@ -129,9 +129,11 @@
   .pill-group .pill:nth-child(6n + 1) {
     --pill-accent: var(--bright-blue);
   }
+
   .pill-group .pill:nth-child(6n + 2) {
     --pill-accent: var(--french-violet);
   }
+
   .pill-group .pill:nth-child(6n + 3),
   .pill-group .pill:nth-child(6n + 4),
   .pill-group .pill:nth-child(6n + 5) {
@@ -187,6 +189,10 @@
 
       <img id="qrCodeImage" alt="QR Code will appear here" style="width: 400px; height: 400px;">
 
+      <h2>Logout</h2>
+      <input type="button" value="Logout" (click)="logout()" />
+      <br />
+
       <h2>Request accounts</h2>
       <span class="method-name">method: wallet_requestAccounts</span>
       <input type="text" [value]="chainId" />
@@ -226,10 +232,7 @@
       <input type="text" [(ngModel)]="signFrom" />
       <label>Sign message</label>
       <br />
-      <textarea
-        [(ngModel)]="signMessageString"
-        style="resize: vertical; width: 100%"
-      ></textarea>
+      <textarea [(ngModel)]="signMessageString" style="resize: vertical; width: 100%"></textarea>
       <br />
       <input type="button" value="Sign message" (click)="signMessage()" />
     </div>
