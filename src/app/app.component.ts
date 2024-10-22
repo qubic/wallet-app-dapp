@@ -60,6 +60,19 @@ export class AppComponent {
     }
   };
 
+
+  public copyToClipboard(content: string) {
+    navigator.clipboard.writeText(content).then(() => {
+      console.log('Content copied to clipboard');
+    }).catch(err => {
+      console.error('Failed to copy content: ', err);
+    });
+  }
+
+  public copyUrl() {
+    this.copyToClipboard(this.connectionURL);
+  }
+
   public async genUrl() {
     const { uri, approval } = await this.signClient.connect({
       // Provide the namespaces

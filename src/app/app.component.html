@@ -185,17 +185,25 @@
       <input type="button" value="Generate URL" (click)="genUrl()" />
       <br />
       <label>Result</label>
-      <input type="text" [value]="connectionURL" readonly />
-
+      <br />
+      <textarea readonly [value]="connectionURL" rows="5" cols="50"></textarea>
+      <br />
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <input type="button" value="Copy URL" (click)="copyUrl()" style="align-self: center;" />
+      </div>
+      <br />
+      <br />
       <img id="qrCodeImage" alt="QR Code will appear here" style="width: 400px; height: 400px;">
-
       <h2>Logout</h2>
       <input type="button" value="Logout" (click)="logout()" />
       <br />
 
+      <h2>Chain Id</h2>
+      <input type="text" [value]="chainId" />
+
       <h2>Request accounts</h2>
       <span class="method-name">method: wallet_requestAccounts</span>
-      <input type="text" [value]="chainId" />
+
       <input type="button" value="Request accounts" (click)="reqAccounts()" />
 
       <h2>Send $Qubic</h2>
@@ -228,6 +236,7 @@
       <input type="button" value="Sign Transaction" (click)="signTransaction()" />
 
       <h2>Sign message</h2>
+      <span class="method-name">method: qubic_sign</span>
       <label>Sign from</label>
       <input type="text" [(ngModel)]="signFrom" />
       <label>Sign message</label>
