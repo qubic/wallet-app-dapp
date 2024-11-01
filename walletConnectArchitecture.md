@@ -55,7 +55,7 @@ On success, an `ApproveTokenTransferResult` object is received:
 |--|--|
 |tick| Number | The tick that the transfer was scheduled for |
 
-On error a standard `JsonRpcError` is received. Its the `errorMessage` property for details
+On error a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
 
 ### qubic_signTransaction
 
@@ -72,10 +72,29 @@ Method parameters:
 On success, an `ApproveSignTransactionResult` object is received:
 |Property| Type | Value |
 |--|--|
-|signedTransaction| String | The signed transaction payload
+|signedTransaction| String | The signed transaction payload |
 |tick| Number | The tick that the transfer was signed for |
 
-On error a standard `JsonRpcError` is received. Its the `errorMessage` property for details
+On error a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
+
+
+### qubic_sign
+
+Asks the wallet sign a message. 
+
+Method parameters:
+|Param |Type | Info
+|--|--|--|
+|fromID | String | The ID to sign the message from |
+|message | String |The message to be signed |
+
+On success, an `ApproveSignGenericResult` object is received:
+|Property| Type | Value |
+|--|--|
+|signedMessage| String | The signed message |
+
+On error a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
+
 
 ### sendAsset
 
