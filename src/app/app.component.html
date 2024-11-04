@@ -20,15 +20,19 @@
     --gray-700: oklch(36.98% 0.014 302.71);
     --gray-400: oklch(70.9% 0.015 304.04);
 
-    --red-to-pink-to-purple-vertical-gradient: linear-gradient(180deg,
-        var(--orange-red) 0%,
-        var(--vivid-pink) 50%,
-        var(--electric-violet) 100%);
+    --red-to-pink-to-purple-vertical-gradient: linear-gradient(
+      180deg,
+      var(--orange-red) 0%,
+      var(--vivid-pink) 50%,
+      var(--electric-violet) 100%
+    );
 
-    --red-to-pink-to-purple-horizontal-gradient: linear-gradient(90deg,
-        var(--orange-red) 0%,
-        var(--vivid-pink) 50%,
-        var(--electric-violet) 100%);
+    --red-to-pink-to-purple-horizontal-gradient: linear-gradient(
+      90deg,
+      var(--orange-red) 0%,
+      var(--vivid-pink) 50%,
+      var(--electric-violet) 100%
+    );
 
     --pill-accent: var(--bright-blue);
 
@@ -187,13 +191,28 @@
       <label>Result</label>
       <br />
       <textarea readonly [value]="connectionURL" rows="5" cols="50"></textarea>
+      <small style="font-size: 8px" *ngIf="connectionURL !== ''">
+        <br />
+        <a href="qubic-wallet://pairwc/{{ connectionURL }}" target="_blank"
+          >qubic-wallet://pairwc/{{ connectionURL }}</a
+        >
+      </small>
       <br />
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <input type="button" value="Copy URL" (click)="copyUrl()" style="align-self: center;" />
+      <div style="display: flex; justify-content: center; align-items: center">
+        <input
+          type="button"
+          value="Copy URL"
+          (click)="copyUrl()"
+          style="align-self: center"
+        />
       </div>
       <br />
       <br />
-      <img id="qrCodeImage" alt="QR Code will appear here" style="width: 400px; height: 400px;">
+      <img
+        id="qrCodeImage"
+        alt="QR Code will appear here"
+        style="width: 400px; height: 400px"
+      />
       <h2>Logout</h2>
       <input type="button" value="Logout" (click)="logout()" />
       <br />
@@ -233,7 +252,11 @@
       Tick
       <input type="text" [(ngModel)]="tick" />
       <br />
-      <input type="button" value="Sign Transaction" (click)="signTransaction()" />
+      <input
+        type="button"
+        value="Sign Transaction"
+        (click)="signTransaction()"
+      />
 
       <h2>Sign message</h2>
       <span class="method-name">method: qubic_sign</span>
@@ -241,13 +264,20 @@
       <input type="text" [(ngModel)]="signFrom" />
       <label>Sign message</label>
       <br />
-      <textarea [(ngModel)]="signMessageString" style="resize: vertical; width: 100%"></textarea>
+      <textarea
+        [(ngModel)]="signMessageString"
+        style="resize: vertical; width: 100%"
+      ></textarea>
       <br />
       <input type="button" value="Sign message" (click)="signMessage()" />
     </div>
 
     <div class="right-side" style="flex: 1; margin-left: 24px">
-      <textarea readonly style="width: 100%; min-height: 600px; min-width:400px;" [value]="myConsole"></textarea>
+      <textarea
+        readonly
+        style="width: 100%; min-height: 600px; min-width: 400px"
+        [value]="myConsole"
+      ></textarea>
       <!-- Clear Button -->
       <input type="button" value="Clear" (click)="clear()" />
     </div>

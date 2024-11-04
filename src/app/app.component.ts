@@ -1,14 +1,16 @@
 import { FormsModule } from '@angular/forms';
 
 import { Component } from '@angular/core';
+
 import { RouterOutlet } from '@angular/router';
 import { SignClient } from '@walletconnect/sign-client';
 import QRCode from 'qrcode';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule],
+  imports: [RouterOutlet, FormsModule, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -49,7 +51,9 @@ export class AppComponent {
       const qrCodeDataURL = await QRCode.toDataURL(text);
 
       // Update the img tag src attribute with the generated QR code
-      const imgElement = document.getElementById('qrCodeImage') as HTMLImageElement;
+      const imgElement = document.getElementById(
+        'qrCodeImage'
+      ) as HTMLImageElement;
       if (imgElement) {
         imgElement.src = qrCodeDataURL; // Set the src attribute to the base64 QR code data
       }
@@ -60,13 +64,15 @@ export class AppComponent {
     }
   };
 
-
   public copyToClipboard(content: string) {
-    navigator.clipboard.writeText(content).then(() => {
-      console.log('Content copied to clipboard');
-    }).catch(err => {
-      console.error('Failed to copy content: ', err);
-    });
+    navigator.clipboard
+      .writeText(content)
+      .then(() => {
+        console.log('Content copied to clipboard');
+      })
+      .catch((err) => {
+        console.error('Failed to copy content: ', err);
+      });
   }
 
   public copyUrl() {
@@ -84,7 +90,7 @@ export class AppComponent {
             'qubic_sendQubic',
             'qubic_sendAsset',
             'qubic_signTransaction',
-            'qubic_sign'
+            'qubic_sign',
           ],
           // Provide the session events that you wish to listen
           events: ['amountChanged', 'tokenAmountChanged', 'accountsChanged'],
@@ -139,7 +145,7 @@ export class AppComponent {
       });
       this.logConsole('Requested accounts:');
       this.logConsole(JSON.stringify(result));
-      console.log(result)
+      console.log(result);
     } catch (error) {
       this.logConsole('Failed to request accounts');
     }
@@ -264,7 +270,6 @@ export class AppComponent {
 
   public async logout() {
     try {
-
       if (!this.sessionTopic) {
         this.logConsole('sessionTopic is empty');
         return;
@@ -274,7 +279,7 @@ export class AppComponent {
 
       await this.signClient.disconnect({
         topic: this.sessionTopic,
-        reason: { code: 6000, message: 'User logged out' }
+        reason: { code: 6000, message: 'User logged out' },
       });
 
       // Optionally clear local storage or session data
@@ -306,9 +311,7 @@ export class AppComponent {
 
       if (storedSessionTopic && sessions.length > 0) {
         // find the session with the stored topic
-        const session = sessions.find(
-          (s) => s.topic === storedSessionTopic
-        );
+        const session = sessions.find((s) => s.topic === storedSessionTopic);
         if (session) {
           this.logConsole('Restored session from local storage');
           this.handleSessionConnected(session);
@@ -317,7 +320,6 @@ export class AppComponent {
           localStorage.removeItem('sessionTopic');
         }
       }
-
 
       this.signClient.on('session_proposal', async (payload) => {
         this.logConsole('Session proposal received');
@@ -340,14 +342,12 @@ export class AppComponent {
         console.log('Session delete', payload);
         this.sessionTopic = '';
         localStorage.removeItem('sessionTopic');
-
       });
       this.signClient.on('session_expire', async (payload) => {
         this.logConsole('Session expire received');
         console.log('Session expire', payload);
         this.sessionTopic = '';
         localStorage.removeItem('sessionTopic');
-
       });
       this.signClient.on('session_request', async (payload) => {
         this.logConsole('Session request received');
@@ -385,5 +385,4 @@ export class AppComponent {
       });
     });
   }
-
 }
