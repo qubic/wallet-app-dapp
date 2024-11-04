@@ -23,8 +23,8 @@ export class AppComponent {
   connectionURL = '';
   sessionTopic = '';
 
-  method = 'wallet_requestAccounts';
-  chainId = 'qubic:main';
+  method = 'qubic_requestAccounts';
+  public chainId = 'qubic:main';
 
   public sendFrom = '';
   public sendAmount = '';
@@ -83,10 +83,11 @@ export class AppComponent {
     const { uri, approval } = await this.signClient.connect({
       // Provide the namespaces
       requiredNamespaces: {
-        'qubic:main': {
+        qubic: {
+          chains: ['qubic:main'],
           methods: [
             // Provide the methods that you wish to call
-            'wallet_requestAccounts',
+            'qubic_requestAccounts',
             'qubic_sendQubic',
             'qubic_sendAsset',
             'qubic_signTransaction',
@@ -107,9 +108,10 @@ export class AppComponent {
       console.log(info);
       this.logConsole('Got approval');
       this.handleSessionConnected(info);
+      this.logConsole(JSON.stringify(info));
     } catch (e) {
-      console.log(e);
-      this.logConsole('Approval was rejected (get console)');
+      this.logConsole('Approval was rejected:');
+      this.logConsole(JSON.stringify(e));
     }
   }
 
@@ -118,6 +120,7 @@ export class AppComponent {
     const session = await this.approval();
 
     this.logConsole('Got approval');
+    this.logConsole(JSON.stringify(session));
     this.handleSessionConnected(session);
   }
 
@@ -139,8 +142,13 @@ export class AppComponent {
         topic: this.sessionTopic,
         chainId: this.chainId,
         request: {
-          method: 'wallet_requestAccounts',
-          params: [],
+          method: 'qubic_requestAccounts',
+          params: {
+            fromID: this.sendFrom,
+            toID: this.sendTo,
+            amount: this.sendAmount,
+            nonce: new Date().getTime() + '',
+          },
         },
       });
       this.logConsole('Requested accounts:');
@@ -148,6 +156,7 @@ export class AppComponent {
       console.log(result);
     } catch (error) {
       this.logConsole('Failed to request accounts');
+      this.logConsole(JSON.stringify(error));
     }
   }
 

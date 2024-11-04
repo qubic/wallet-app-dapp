@@ -31,7 +31,7 @@ Once accepted, the connection is established as a session. The session can be ac
 
 ## Exposed methods
 
-### wallet_requestAccounts
+### qubic_requestAccounts
 
 Requests all accounts in wallet.
 Method parameters: _None_

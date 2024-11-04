@@ -218,10 +218,10 @@
       <br />
 
       <h2>Chain Id</h2>
-      <input type="text" [value]="chainId" />
+      <input type="text" [(ngModel)]="chainId" />
 
       <h2>Request accounts</h2>
-      <span class="method-name">method: wallet_requestAccounts</span>
+      <span class="method-name">method: qubic_requestAccounts</span>
 
       <input type="button" value="Request accounts" (click)="reqAccounts()" />
 
