@@ -84,7 +84,7 @@ export class AppComponent {
       // Provide the namespaces
       requiredNamespaces: {
         qubic: {
-          chains: ['qubic:main'],
+          chains: [this.chainId],
           methods: [
             // Provide the methods that you wish to call
             'qubic_requestAccounts',
