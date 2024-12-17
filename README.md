@@ -57,7 +57,7 @@ Method parameters:
 
 On success, an `ApproveTokenTransferResult` object is received:
 |Property| Type | Value |
-|--|--|
+|--|--|--|
 |tick| Number | The tick that the transfer was scheduled for |
 
 On error a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
@@ -76,7 +76,7 @@ Method parameters:
 
 On success, an `ApproveSignTransactionResult` object is received:
 |Property| Type | Value |
-|--|--|
+|--|--|--|
 |signedTransaction| String | The signed transaction payload |
 |tick| Number | The tick that the transfer was signed for |
 
@@ -94,7 +94,7 @@ Method parameters:
 
 On success, an `ApproveSignGenericResult` object is received:
 |Property| Type | Value |
-|--|--|
+|--|--|--|
 |signedMessage| String | The signed message |
 
 On error a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
