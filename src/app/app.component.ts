@@ -30,6 +30,8 @@ export class AppComponent {
   public sendAmount = '';
   public sendTo = '';
   public tick = 0;
+  public inputType = '';
+  public payload = '';
 
   public signFrom = '';
   public signMessageString = '';
@@ -208,6 +210,8 @@ export class AppComponent {
             toID: this.sendTo,
             amount: this.sendAmount,
             tick: this.tick,
+            inputType: this.inputType,
+            payload: this.payload,
             nonce: new Date().getTime() + '',
           },
         },
