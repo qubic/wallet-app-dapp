@@ -36,7 +36,7 @@ Once accepted, the connection is established as a session. The session can be ac
 Requests all accounts in wallet.
 Method parameters: _None_
 
-On success, an array of `RequestAccountsResult` is objects is received:
+On success, an array of `RequestAccountsResult` objects is received:
 
 | Property | Type   | Value                                 |
 | -------- | ------ | ------------------------------------- |
@@ -58,13 +58,15 @@ Method parameters:
 On success, an `ApproveTokenTransferResult` object is received:
 |Property| Type | Value |
 |--|--|--|
+|txId| String | Transaction unique identifier |
+|signedTransaction| String | The signed transaction payload |
 |tick| Number | The tick that the transfer was scheduled for |
 
-On error a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
+On error, a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
 
 ### qubic_signTransaction
 
-Asks the wallet sign a transaction. The signed value can be used with Qubic RPC to send Qubic to a specific address
+Asks the wallet to sign a transaction. The signed value can be used with Qubic RPC to send Qubic to a specific address.
 
 Method parameters:
 |Param |Type | Info
@@ -73,12 +75,39 @@ Method parameters:
 |toID | String |The ID to send Qubic to |
 |amount| int| The number of Qubic to send|
 |tick| int (optional) | If defined, indicates the tick for the transaction. Otherwise the transaction will be signed for CurrentTick + 5 |
+|inputType|	Number (optional) | Transaction input type|
+|payload| String (optional) | Payload bytes (in hexadecimal format)|
 
 On success, an `ApproveSignTransactionResult` object is received:
 |Property| Type | Value |
 |--|--|--|
+|txId| String | Transaction unique identifier |
+|signedTransaction| String | The signed transaction payload|
+|tick| Number | The tick that the transfer was signed for|
+
+
+On error a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
+
+### qubic_sendTransaction
+
+Asks the wallet to sign and broadcast a transaction.
+
+Method parameters:
+|Param |Type | Info
+|--|--|--|
+|fromID | String | The ID to send Qubic from |
+|toID | String |The ID to send Qubic to |
+|amount| int| The number of Qubic to send|
+|tick| int (optional) | If defined, indicates the tick for the transaction. Otherwise the transaction will be signed for CurrentTick + 5 |
+|inputType|	Number (optional) | Transaction input type|
+|payload| String (optional) | Payload bytes (in hexadecimal format)|
+
+On success, a `SendTransactionResult` object is received:
+|Property| Type | Value |
+|--|--|--|
+|txId| String | Transaction unique identifier |
 |signedTransaction| String | The signed transaction payload |
-|tick| Number | The tick that the transfer was signed for |
+|tick| Number | The tick that the transfer was scheduled for |
 
 On error a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
 
