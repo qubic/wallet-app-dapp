@@ -254,6 +254,28 @@
       <br />
       <input type="button" value="Sign Transaction" (click)="signTransaction()" />
 
+
+      <h2>Send transaction</h2>
+      <span class="method-name">method: qubic_sendTransaction</span>
+      <label>From</label>
+      <input type="text" [(ngModel)]="sendFrom" />
+      To
+      <input type="text" [(ngModel)]="sendTo" />
+      <br />
+      Amount
+      <input type="text" [(ngModel)]="sendAmount" />
+      <br />
+      Tick
+      <input type="text" [(ngModel)]="tick" />
+      <br />
+      Input Type
+      <input type="text" [(ngModel)]="inputType" />
+      <br />
+      Payload
+      <input type="text" [(ngModel)]="payload" />
+      <br />
+      <input type="button" value="Send Transaction" (click)="sendTransaction()" />
+
       <h2>Sign message</h2>
       <span class="method-name">method: qubic_sign</span>
       <label>Sign from</label>

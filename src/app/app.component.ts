@@ -93,6 +93,7 @@ export class AppComponent {
             'qubic_sendQubic',
             'qubic_sendAsset',
             'qubic_signTransaction',
+            'qubic_sendTransaction',
             'qubic_sign',
           ],
           // Provide the session events that you wish to listen
@@ -212,6 +213,32 @@ export class AppComponent {
             tick: this.tick,
             inputType: this.inputType,
             payload: this.payload,
+            nonce: new Date().getTime() + '',
+          },
+        },
+      });
+      this.logConsole('Result:');
+      this.logConsole(JSON.stringify(result));
+    } catch (e) {
+      this.logConsole('Error: ');
+      this.logConsole(JSON.stringify(e));
+    }
+  }
+
+  public async sendTransaction() {
+    try {
+      const result = await this.signClient.request({
+        topic: this.sessionTopic,
+        chainId: this.chainId,
+        request: {
+          method: 'qubic_sendTransaction',
+          params: {
+            fromID: this.sendFrom,
+            toID: this.sendTo,
+            amount: this.sendAmount,
+            tick: this.tick,
+            inputType: this.inputType,
+            payload: this.payload ? this.payload : null,
             nonce: new Date().getTime() + '',
           },
         },
