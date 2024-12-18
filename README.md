@@ -1,6 +1,6 @@
 # WalletConnect Angular example
 
-This example provides a kitchen-sink example on how a dAPP can interact with Qubic Wallet via WalletConnect.
+This example provides a kitchen-sink example on how a dApp can interact with Qubic Wallet via WalletConnect.
 
 ## Installation
 
@@ -16,17 +16,22 @@ WalletConnect is an open source technology that makes it easy to connect any sup
 | Term    | Explanation                                                                                        |
 | ------- | -------------------------------------------------------------------------------------------------- |
 | dApp    | A (web3) application which needs access to the Qubic Wallet                                        |
-| session | A connection between a dAPP and the Qubic Wallet                                                   |
-| method  | Functionality that is exposed by the Qubic Wallet and can be invoked by the dAPP                   |
-| event   | Information that can be pushed from the Qubic Wallet to a dAPP without the later making any action |
+| session | A connection between a dApp and the Qubic Wallet                                                   |
+| method  | Functionality that is exposed by the Qubic Wallet and can be invoked by the dApp                   |
+| event   | Information that can be pushed from the Qubic Wallet to a dApp without the later making any action |
 
 ## Session establishment
 
-A dAPP initializes a connection to the WC servers and generates a connection URL. This URL contains info about the dAPP and the required _methods_ and _events_ that are going to be used in the connection. This URL is passed to the wallet (via copy - past / QR code scanning ).The wallet prompts its user to accept or reject the connection.
-If rejected, the client receives
+A dApp initializes a connection to the WC servers and generates a connection URL. 
+The URL contains information about the dApp and the required _methods_ and _events_ that are going to be used in the connection. 
+The URL is passed to the wallet (via QR code scanning or copy-paste). 
+The wallet prompts the user to accept or reject the connection.
+
+If rejected, the dApp receives the following response: 
 `{code: 5000, message: 'User rejected.'}`
-If accepted, the client receives a
-`session connected` event. This event contains various info, most importantly the _expiration time_(when the session dies) and _topic_(which is an ID)
+
+If accepted, the dApp receives a
+`session connected` event. This event contains various information, most importantly the _expiration time_(when the session dies) and _topic_(which is an ID)
 Once accepted, the connection is established as a session. The session can be active for a few hours to a few days.
 
 ## Exposed methods
@@ -85,11 +90,11 @@ On success, an `ApproveSignTransactionResult` object is received:
 |signedTransaction| String | The signed transaction payload|
 |tick| Number | The tick that the transfer was signed for|
 
-
-On error a standard `JsonRpcError` is received. See `JSON-RPC errors` for more details.
+On error a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
 
 ### qubic_sendTransaction
 
+< WIP >
 Asks the wallet to sign and broadcast a transaction.
 
 Method parameters:
@@ -124,12 +129,13 @@ Method parameters:
 On success, an `ApproveSignGenericResult` object is received:
 |Property| Type | Value |
 |--|--|--|
-|signedMessage| String | The signed message |
+|signedMessage| String | The signed message. Before creating the signature, the string 'Qubic Signed Message:\n' is prepended to the message|
 
 On error a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
 
 ### sendAsset
 
+< WIP >
 Asks the wallet to transfer assets to a specific address (upon confirmation of the user)
 
 Method parameters:
