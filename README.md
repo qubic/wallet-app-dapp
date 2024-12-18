@@ -62,7 +62,7 @@ On success, an `ApproveTokenTransferResult` object is received:
 |signedTransaction| String | The signed transaction payload |
 |tick| Number | The tick that the transfer was scheduled for |
 
-On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` for more details.
+On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
 
 ### qubic_signTransaction
 
@@ -109,7 +109,7 @@ On success, a `SendTransactionResult` object is received:
 |signedTransaction| String | The signed transaction payload |
 |tick| Number | The tick that the transfer was scheduled for |
 
-On error a standard `JsonRpcError` is received. See `JSON-RPC errors` for more details.
+On error a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
 
 ### qubic_sign
 
@@ -126,7 +126,7 @@ On success, an `ApproveSignGenericResult` object is received:
 |--|--|--|
 |signedMessage| String | The signed message |
 
-On error a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
+On error a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
 
 ### sendAsset
 
@@ -147,7 +147,7 @@ On success, an `ApproveTokenTransferResult` object is received:
 |signedTransaction| String | The signed transaction payload |
 |tick| Number | The tick that the transfer was scheduled for |
 
-On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` for more details.
+On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
 
 
 # Exposed events
