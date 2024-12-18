@@ -51,8 +51,8 @@ Asks the wallet to send Qubic to a specific address (upon confirmation of the us
 Method parameters:
 |Param |Type | Info
 |--|--|--|
-|fromID | String | The ID to send Qubic from |
-|toID | String |The ID to send Qubic to |
+|fromID | String | Source Public Key |
+|toID | String | Destination Public Key |
 |amount| int| The number of Qubic to send|
 
 On success, an `ApproveTokenTransferResult` object is received:
@@ -62,7 +62,7 @@ On success, an `ApproveTokenTransferResult` object is received:
 |signedTransaction| String | The signed transaction payload |
 |tick| Number | The tick that the transfer was scheduled for |
 
-On error, a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
+On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` for more details.
 
 ### qubic_signTransaction
 
@@ -71,8 +71,8 @@ Asks the wallet to sign a transaction. The signed value can be used with Qubic R
 Method parameters:
 |Param |Type | Info
 |--|--|--|
-|fromID | String | The ID to send Qubic from |
-|toID | String |The ID to send Qubic to |
+|fromID | String | Source Public Key |
+|toID | String | Destination Public Key |
 |amount| int| The number of Qubic to send|
 |tick| int (optional) | If defined, indicates the tick for the transaction. Otherwise the transaction will be signed for CurrentTick + 5 |
 |inputType|	Number (optional) | Transaction input type|
@@ -86,7 +86,7 @@ On success, an `ApproveSignTransactionResult` object is received:
 |tick| Number | The tick that the transfer was signed for|
 
 
-On error a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
+On error a standard `JsonRpcError` is received. See `JSON-RPC errors` for more details.
 
 ### qubic_sendTransaction
 
@@ -95,8 +95,8 @@ Asks the wallet to sign and broadcast a transaction.
 Method parameters:
 |Param |Type | Info
 |--|--|--|
-|fromID | String | The ID to send Qubic from |
-|toID | String |The ID to send Qubic to |
+|fromID | String | Source Public Key |
+|toID | String | Destination Public Key |
 |amount| int| The number of Qubic to send|
 |tick| int (optional) | If defined, indicates the tick for the transaction. Otherwise the transaction will be signed for CurrentTick + 5 |
 |inputType|	Number (optional) | Transaction input type|
@@ -109,7 +109,7 @@ On success, a `SendTransactionResult` object is received:
 |signedTransaction| String | The signed transaction payload |
 |tick| Number | The tick that the transfer was scheduled for |
 
-On error a standard `JsonRpcError` is received. Its the `errorMessage` and `errorCode` properties for details
+On error a standard `JsonRpcError` is received. See `JSON-RPC errors` for more details.
 
 ### qubic_sign
 
@@ -118,7 +118,7 @@ Asks the wallet sign a message.
 Method parameters:
 |Param |Type | Info
 |--|--|--|
-|fromID | String | The ID to sign the message from |
+|fromID | String | Source Public Key |
 |message | String |The message to be signed |
 
 On success, an `ApproveSignGenericResult` object is received:
@@ -130,13 +130,31 @@ On error a standard `JsonRpcError` is received. Its the `errorMessage` and `erro
 
 ### sendAsset
 
-To be implemented
+Asks the wallet to transfer assets to a specific address (upon confirmation of the user)
+
+Method parameters:
+|Param |Type | Info
+|--|--|--|
+|fromID | String | Source Public Key |
+|toID | String | Destination Public Key |
+|assetName| String| The name of the asset to transfer|
+|amount| int| The amount of tokens to send|
+
+On success, an `ApproveTokenTransferResult` object is received:
+|Property| Type | Value |
+|--|--|--|
+|txId| String | Transaction unique identifier |
+|signedTransaction| String | The signed transaction payload |
+|tick| Number | The tick that the transfer was scheduled for |
+
+On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` for more details.
+
 
 # Exposed events
 
 ## accountsChanged
 
-Fires when the accounts in the wallet are changed (added/ removed/ renamed / deleted / wallet is launched)
+Fires when the accounts in the wallet are changed (added/ renamed / deleted / wallet is launched)
 
 Payload
 `[{"address":"ACDRUPXVDMRVDBVYHUEUTBNNIQOCRXLYSLEZZHHXYGQXITDFCEJB","name":"QH","amount":17483927320},{"address":"ACDRUPXVDMRVDBVYHUEUTBNNIQOCRXLYSLEZZHHXYGQXITDFCEJBBUUBGJGM","name":"QH2","amount":0}]`
@@ -144,7 +162,7 @@ Payload
 |--|--|--|
 |address | String| The public ID of the account |
 |name | String| The human readable name of the wallet account|
-|amount| int| The number of Qubics in the account. Can be -1 if wallet has no amount information for this account
+|amount| int| The number of Qubics in the account. -1 value indicates the wallet does not have this information for the account
 
 ## amountChanged
 
@@ -157,3 +175,6 @@ Payload
 |address | String| The public ID of the account |
 |name | String| The human readable name of the wallet account|
 |amount| int| The number of Qubics in the account
+
+# JSON-RPC errors
+< WIP >
