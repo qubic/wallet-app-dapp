@@ -260,7 +260,7 @@ export class AppComponent {
         request: {
           method: 'qubic_sign',
           params: {
-            fromID: this.signFrom,
+            fromID: this.sendFrom,
             message: this.signMessageString,
           },
         },
