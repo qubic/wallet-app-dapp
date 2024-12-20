@@ -30,7 +30,7 @@ export class AppComponent {
   public sendFrom = '';
   public sendAmount = '';
   public sendTo = '';
-  public tick = 0;
+  public tick;
   public inputType = '';
   public payload = '';
 
@@ -136,7 +136,7 @@ export class AppComponent {
   }
 
   //Requests accounts from wallet
-  public async reqAccounts() {
+  public async requestAccounts() {
     if (!this.checkSessionStatus()) {
       this.logConsole('Cannot request accounts. No active session.');
       return;
@@ -163,18 +163,6 @@ export class AppComponent {
       this.logConsole(JSON.stringify(error));
     }
   }
-
-  public async reqTick() {
-    const result = await this.signClient.request({
-      topic: this.sessionTopic,
-      chainId: this.chainId,
-      request: {
-        method: 'wallet_requestTick',
-        params: [],
-      },
-    });
-  }
-
 
   //Requests accounts from wallet
   public async sendQubic() {
@@ -364,65 +352,67 @@ export class AppComponent {
       }
 
       this.signClient.on('session_proposal', async (payload) => {
-        this.logConsole('Session proposal received');
+        this.logConsole('\nSession proposal received');
+        this.logConsole(JSON.stringify(payload));
         console.log('Proposal received', payload);
       });
       this.signClient.on('session_update', async (payload) => {
-        this.logConsole('Session update received');
+        this.logConsole('\nSession update received');
+        this.logConsole(JSON.stringify(payload));
         console.log('Session update', payload);
       });
       this.signClient.on('session_extend', async (payload) => {
-        this.logConsole('Session extend received');
+        this.logConsole('\nSession extend received');
+        this.logConsole(JSON.stringify(payload));
         console.log('Session extend', payload);
       });
       this.signClient.on('session_ping', async (payload) => {
-        this.logConsole('Session ping received');
+        this.logConsole('\nSession ping received');
+        this.logConsole(JSON.stringify(payload));
         console.log('Session ping', payload);
       });
       this.signClient.on('session_delete', async (payload) => {
-        this.logConsole('Session delete received');
+        this.logConsole('\nSession delete received');
+        this.logConsole(JSON.stringify(payload));
         console.log('Session delete', payload);
         this.sessionTopic = '';
         localStorage.removeItem('sessionTopic');
       });
       this.signClient.on('session_expire', async (payload) => {
-        this.logConsole('Session expire received');
+        this.logConsole('\nSession expire received');
+        this.logConsole(JSON.stringify(payload));
         console.log('Session expire', payload);
         this.sessionTopic = '';
         localStorage.removeItem('sessionTopic');
       });
       this.signClient.on('session_request', async (payload) => {
-        this.logConsole('Session request received');
+        this.logConsole('\nSession request received');
+        this.logConsole(JSON.stringify(payload));
         console.log('Session request', payload);
       });
       this.signClient.on('session_request_sent', async (payload) => {
-        this.logConsole('Session request sent');
+        this.logConsole('\nSession request sent');
+        this.logConsole(JSON.stringify(payload));
         console.log('Session request sent', payload);
       });
       this.signClient.on('session_event', async (payload) => {
-        this.logConsole('Session event received');
-        try {
-          let name = payload.params.event.name;
-          let data = payload.params.event.data;
-          this.logConsole(
-            'Seesion event received: ' + name + ' data ' + JSON.stringify(data)
-          );
-        } catch (e) {
-          this.logConsole('Session event received');
-        }
-
+        this.logConsole('\nSession event received');
+        this.logConsole(JSON.stringify(payload));
         console.log('Session event', payload);
       });
       this.signClient.on('session_authenticate', async (payload) => {
-        this.logConsole('Session authenticate received');
+        this.logConsole('\nSession authenticate received');
+        this.logConsole(JSON.stringify(payload));
         console.log('Session authenticate', payload);
       });
       this.signClient.on('proposal_expire', async (payload) => {
-        this.logConsole('Proposal expire received');
+        this.logConsole('\nProposal expire received');
+        this.logConsole(JSON.stringify(payload));
         console.log('Proposal expire', payload);
       });
       this.signClient.on('session_request_expire', async (payload) => {
-        this.logConsole('Session request expire received');
+        this.logConsole('\nSession request expire received');
+        this.logConsole(JSON.stringify(payload));
         console.log('Session request expire', payload);
       });
     });
