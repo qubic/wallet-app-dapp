@@ -51,8 +51,8 @@ Asks the wallet to send Qubic to a specific address (upon confirmation of the us
 Method parameters:
 |Param |Type | Info
 |--|--|--|
-|fromID | String | The ID to send Qubic from |
-|toID | String |The ID to send Qubic to |
+|from | String | The ID to send Qubic from |
+|to | String |The ID to send Qubic to |
 |amount| int| The number of Qubic to send|
 
 On success, an `ApproveTokenTransferResult` object is received:
@@ -69,8 +69,8 @@ Asks the wallet sign a transaction. The signed value can be used with Qubic RPC 
 Method parameters:
 |Param |Type | Info
 |--|--|--|
-|fromID | String | The ID to send Qubic from |
-|toID | String |The ID to send Qubic to |
+|from | String | The ID to send Qubic from |
+|to | String |The ID to send Qubic to |
 |amount| int| The number of Qubic to send|
 |tick| int (optional) | If defined, indicates the tick for the transaction. Otherwise the transaction will be signed for CurrentTick + 5 |
 
@@ -89,7 +89,7 @@ Asks the wallet sign a message.
 Method parameters:
 |Param |Type | Info
 |--|--|--|
-|fromID | String | The ID to sign the message from |
+|from | String | The ID to sign the message from |
 |message | String |The message to be signed |
 
 On success, an `ApproveSignGenericResult` object is received:
