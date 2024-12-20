@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
+
 export class AppComponent {
   NO_ADDRESS = '000000000000000000000000000000000000000000000000000000000000';
 
@@ -147,8 +148,8 @@ export class AppComponent {
         request: {
           method: 'qubic_requestAccounts',
           params: {
-            fromID: this.sendFrom,
-            toID: this.sendTo,
+            from: this.sendFrom,
+            to: this.sendTo,
             amount: this.sendAmount,
             nonce: new Date().getTime() + '',
           },
@@ -174,6 +175,7 @@ export class AppComponent {
     });
   }
 
+
   //Requests accounts from wallet
   public async sendQubic() {
     try {
@@ -183,8 +185,8 @@ export class AppComponent {
         request: {
           method: 'qubic_sendQubic',
           params: {
-            fromID: this.sendFrom,
-            toID: this.sendTo,
+            from: this.sendFrom,
+            to: this.sendTo,
             amount: this.sendAmount,
             nonce: new Date().getTime() + '',
           },
@@ -207,8 +209,8 @@ export class AppComponent {
         request: {
           method: 'qubic_signTransaction',
           params: {
-            fromID: this.sendFrom,
-            toID: this.sendTo,
+            from: this.sendFrom,
+            to: this.sendTo,
             amount: this.sendAmount,
             tick: this.tick,
             inputType: this.inputType,
@@ -233,8 +235,8 @@ export class AppComponent {
         request: {
           method: 'qubic_sendTransaction',
           params: {
-            fromID: this.sendFrom,
-            toID: this.sendTo,
+            from: this.sendFrom,
+            to: this.sendTo,
             amount: this.sendAmount,
             tick: this.tick,
             inputType: this.inputType,
@@ -260,7 +262,7 @@ export class AppComponent {
         request: {
           method: 'qubic_sign',
           params: {
-            fromID: this.sendFrom,
+            from: this.sendFrom,
             message: this.signMessageString,
           },
         },
