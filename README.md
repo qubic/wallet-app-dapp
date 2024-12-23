@@ -56,11 +56,59 @@ Asks the wallet to send Qubic to a specific address (upon confirmation of the us
 Method parameters:
 |Param |Type | Info
 |--|--|--|
-|fromID | String | Source Public Key |
-|toID | String | Destination Public Key |
+|from | String | The public ID of the source account |
+|to | String | The public ID of the destination account |
 |amount| int| The number of Qubic to send|
 
-On success, an `ApproveTokenTransferResult` object is received:
+On success, the following data is received:
+|Property| Type | Value |
+|--|--|--|
+|txId| String | Transaction unique identifier |
+|signedTransaction| String | The signed transaction payload |
+|tick| Number | The tick that the transfer was scheduled for. This will be calculated as the tick at the moment of the approval + 5 ticks |
+
+On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
+
+### qubic_signTransaction
+
+Asks the wallet to sign a transaction. The transaction either transfers Qu or invokes a Smart Contract procedure.
+The returned signedTransaction value can be broadcasted to the network at a later time (i.e using https://rpc.qubic.org/v1/broadcast-transaction)
+
+Method parameters:
+|Param |Type | Info
+|--|--|--|
+|from | String | The public ID of the source account |
+|to | String | The public ID of the destination account |
+|amount| int| The number of Qubic to send|
+|tick| int (optional) | If defined, indicates the tick for the transaction. Otherwise, this will be calculated as the tick at the moment of the approval + 5 ticks |
+|inputType|	Number (optional) | Transaction input type|
+|payload| String (optional) | Payload bytes in base64 format |
+
+On success, the following data is received:
+|Property| Type | Value |
+|--|--|--|
+|txId| String | Transaction unique identifier |
+|signedTransaction| String | The signed transaction payload|
+|tick| Number | The tick that the transfer was signed for|
+
+On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
+
+### qubic_sendTransaction
+
+Asks the wallet to sign and broadcast a transaction. The transaction either transfers Qu or invokes a Smart Contract procedure.
+The parameters are equal to those of qubic_signTransaction.
+
+Method parameters:
+|Param |Type | Info
+|--|--|--|
+|from | String | The public ID of the source account |
+|to | String | The public ID of the destination account |
+|amount| int| The number of Qubic to send|
+|tick| int (optional) | If defined, indicates the tick for the transaction. Otherwise, this will be calculated as the tick at the moment of the approval + 5 ticks |
+|inputType|	Number (optional) | Transaction input type|
+|payload| String (optional) | Payload bytes in base64 format |
+
+On success, the following data is received:
 |Property| Type | Value |
 |--|--|--|
 |txId| String | Transaction unique identifier |
@@ -69,53 +117,6 @@ On success, an `ApproveTokenTransferResult` object is received:
 
 On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
 
-### qubic_signTransaction
-
-Asks the wallet to sign a transaction. The signed value can be used with Qubic RPC to send Qubic to a specific address.
-
-Method parameters:
-|Param |Type | Info
-|--|--|--|
-|fromID | String | Source Public Key |
-|toID | String | Destination Public Key |
-|amount| int| The number of Qubic to send|
-|tick| int (optional) | If defined, indicates the tick for the transaction. Otherwise the transaction will be signed for CurrentTick + 5 |
-|inputType|	Number (optional) | Transaction input type|
-|payload| String (optional) | Payload bytes (in hexadecimal format)|
-
-On success, an `ApproveSignTransactionResult` object is received:
-|Property| Type | Value |
-|--|--|--|
-|txId| String | Transaction unique identifier |
-|signedTransaction| String | The signed transaction payload|
-|tick| Number | The tick that the transfer was signed for|
-
-On error a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
-
-### qubic_sendTransaction
-
-< WIP >
-Asks the wallet to sign and broadcast a transaction.
-
-Method parameters:
-|Param |Type | Info
-|--|--|--|
-|fromID | String | Source Public Key |
-|toID | String | Destination Public Key |
-|amount| int| The number of Qubic to send|
-|tick| int (optional) | If defined, indicates the tick for the transaction. Otherwise the transaction will be signed for CurrentTick + 5 |
-|inputType|	Number (optional) | Transaction input type|
-|payload| String (optional) | Payload bytes (in hexadecimal format)|
-
-On success, a `SendTransactionResult` object is received:
-|Property| Type | Value |
-|--|--|--|
-|txId| String | Transaction unique identifier |
-|signedTransaction| String | The signed transaction payload |
-|tick| Number | The tick that the transfer was scheduled for |
-
-On error a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
-
 ### qubic_sign
 
 Asks the wallet sign a message.
@@ -123,15 +124,15 @@ Asks the wallet sign a message.
 Method parameters:
 |Param |Type | Info
 |--|--|--|
-|fromID | String | Source Public Key |
+|from | String | The public ID of the account to be used for signing the message |
 |message | String |The message to be signed |
 
-On success, an `ApproveSignGenericResult` object is received:
+On success, the following data is received:
 |Property| Type | Value |
 |--|--|--|
-|signedMessage| String | The signed message. Before creating the signature, the string 'Qubic Signed Message:\n' is prepended to the message|
+|signedMessage| String | The signed message.</br>Before creating the signature, the string 'Qubic Signed Message:\n' is prepended to the message|
 
-On error a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
+On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
 
 ### sendAsset
 
@@ -141,8 +142,8 @@ Asks the wallet to transfer assets to a specific address (upon confirmation of t
 Method parameters:
 |Param |Type | Info
 |--|--|--|
-|fromID | String | Source Public Key |
-|toID | String | Destination Public Key |
+|from | String | The public ID of the source account |
+|to | String | The public ID of the destination account |
 |assetName| String| The name of the asset to transfer|
 |amount| int| The amount of tokens to send|
 

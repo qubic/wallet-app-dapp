@@ -206,17 +206,20 @@
       <br />
       <img id="qrCodeImage" alt="QR Code will appear here" style="width: 400px; height: 400px" />
       <h2>Logout</h2>
-      <input type="button" value="Logout" (click)="logout()" />
-      <br />
+      <div style="display: flex; justify-content: center; align-items: center">
+
+        <input type="button" value="Logout" (click)="logout()" />
+      </div> <br />
 
 
 
-      <h2>Request accounts</h2>
+      <h2>Request Accounts</h2>
       <span class="method-name">method: qubic_requestAccounts</span>
 
-      <input type="button" value="Request accounts" (click)="reqAccounts()" />
-
-      <h2>Send $Qubic</h2>
+      <div style="display: flex; justify-content: center; align-items: center">
+        <input type="button" value="Request Accounts" (click)="requestAccounts()" />
+      </div>
+      <h2>Send Qubic</h2>
       <span class="method-name">method: qubic_sendQubic</span>
       <label>From</label>
       <input type="text" [(ngModel)]="sendFrom" />
@@ -224,14 +227,14 @@
       To
       <input type="text" [(ngModel)]="sendTo" />
       <br />
-      <input type="button" value="Send qubic" (click)="sendQubic()" />
-
-      <br />
       Amount
       <input type="text" [(ngModel)]="sendAmount" />
       <br />
-
-      <h2>Sign transaction $Qubic</h2>
+      <br />
+      <div style="display: flex; justify-content: center; align-items: center">
+        <input type="button" value="Send Qubic" (click)="sendQubic()" />
+      </div>
+      <h2>Sign Transaction</h2>
       <span class="method-name">method: qubic_signTransaction</span>
       <label>From</label>
       <input type="text" [(ngModel)]="sendFrom" />
@@ -252,23 +255,56 @@
       Payload
       <input type="text" [(ngModel)]="payload" />
       <br />
-      <input type="button" value="Sign Transaction" (click)="signTransaction()" />
+      <br />
+      <div style="display: flex; justify-content: center; align-items: center">
 
-      <h2>Sign message</h2>
+        <input type="button" value="Sign Transaction" (click)="signTransaction()" />
+      </div>
+
+      <h2>Send Transaction</h2>
+      <span class="method-name">method: qubic_sendTransaction</span>
+      <label>From</label>
+      <input type="text" [(ngModel)]="sendFrom" />
+      To
+      <input type="text" [(ngModel)]="sendTo" />
+      <br />
+      Amount
+      <input type="text" [(ngModel)]="sendAmount" />
+      <br />
+      Tick
+      <input type="text" [(ngModel)]="tick" />
+      <br />
+      Input Type
+      <input type="text" [(ngModel)]="inputType" />
+      <br />
+      Payload
+      <input type="text" [(ngModel)]="payload" />
+      <br />
+      <br />
+      <div style="display: flex; justify-content: center; align-items: center">
+        <input type="button" value="Send Transaction" (click)="sendTransaction()" />
+      </div>
+      <h2>Sign Message</h2>
       <span class="method-name">method: qubic_sign</span>
       <label>Sign from</label>
-      <input type="text" [(ngModel)]="signFrom" />
+      <input type="text" [(ngModel)]="sendFrom" />
       <label>Sign message</label>
       <br />
       <textarea [(ngModel)]="signMessageString" style="resize: vertical; width: 100%"></textarea>
       <br />
-      <input type="button" value="Sign message" (click)="signMessage()" />
+      <br />
+      <div style="display: flex; justify-content: center; align-items: center">
+        <input type="button" value="Sign Message" (click)="signMessage()" />
+      </div>
     </div>
 
     <div class="right-side" style="flex: 1; margin-left: 24px">
       <textarea readonly style="width: 100%; min-height: 600px; min-width: 400px" [value]="myConsole"></textarea>
-      <!-- Clear Button -->
-      <input type="button" value="Clear" (click)="clear()" />
+      <div style="display: flex; justify-content: center; align-items: center">
+
+        <!-- Clear Button -->
+        <input type="button" value="Clear" (click)="clear()" />
+      </div>
     </div>
   </div>
 </main>
