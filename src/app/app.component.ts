@@ -27,15 +27,15 @@ export class AppComponent {
   method = 'qubic_requestAccounts';
   public chainId = 'qubic:main';
 
-  public sendFrom = '';
-  public sendAmount = '';
-  public sendTo = '';
-  public tick;
-  public inputType = '';
-  public payload = '';
+  public sendFrom: string | null = null;
+  public sendAmount: string | null = null;
+  public sendTo: string | null = null;
+  public tick: string | null = null;
+  public inputType: string | null = null;
+  public payload: string | null = null;
 
-  public signFrom = '';
-  public signMessageString = '';
+  public signFrom: string | null = null;
+  public signMessageString: string | null = null;
 
   private signClient: any;
   private approval: any;
