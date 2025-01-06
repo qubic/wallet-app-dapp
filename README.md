@@ -134,9 +134,8 @@ On success, the following data is received:
 
 On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
 
-### sendAsset
+### qubic_sendAsset < WIP >
 
-< WIP >
 Asks the wallet to transfer assets to a specific address (upon confirmation of the user)
 
 Method parameters:
@@ -147,7 +146,7 @@ Method parameters:
 |assetName| String| The name of the asset to transfer|
 |amount| int| The amount of tokens to send|
 
-On success, an `ApproveTokenTransferResult` object is received:
+On success, the following data is received:
 |Property| Type | Value |
 |--|--|--|
 |txId| String | Transaction unique identifier |
@@ -155,7 +154,6 @@ On success, an `ApproveTokenTransferResult` object is received:
 |tick| Number | The tick that the transfer was scheduled for |
 
 On error, a standard `JsonRpcError` is received. See `JSON-RPC errors` section for more details.
-
 
 # Exposed events
 
