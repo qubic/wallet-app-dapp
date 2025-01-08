@@ -28,10 +28,10 @@ export class AppComponent {
   public chainId = 'qubic:main';
 
   public sendFrom: string | null = null;
-  public sendAmount: string | null = null;
+  public sendAmount: number | null = null;
   public sendTo: string | null = null;
-  public tick: string | null = null;
-  public inputType: string | null = null;
+  public tick: number | null = null;
+  public inputType: number | null = null;
   public payload: string | null = null;
 
   public signFrom: string | null = null;
