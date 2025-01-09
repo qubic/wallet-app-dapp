@@ -34,6 +34,7 @@ export class AppComponent {
   public inputType: number | null = null;
   public payload: string | null = null;
   public sendAssetName: string | null = null;
+  public sendAssetIssuer: string | null = null;
   public signFrom: string | null = null;
   public signMessageString: string | null = null;
 
@@ -200,6 +201,7 @@ export class AppComponent {
             to: this.sendTo,
             assetName: this.sendAssetName,
             amount: this.sendAmount,
+            issuer: this.sendAssetIssuer,
             nonce: new Date().getTime() + '',
           },
         },
