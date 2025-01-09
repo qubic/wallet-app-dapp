@@ -144,6 +144,7 @@ Method parameters:
 |from | String | The public ID of the source account.|
 |to | String | The public ID of the destination account.|
 |assetName| String| The name of the asset to transfer.|
+|issuer| String| The public ID of the issuer of the token to transfer.|
 |amount| Number| The amount of tokens to send.|
 
 On success, the following data is received:
