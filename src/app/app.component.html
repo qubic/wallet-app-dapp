@@ -223,11 +223,11 @@
       <span class="method-name">method: qubic_sendQubic</span>
       <label>From</label>
       <input type="text" [(ngModel)]="sendFrom" />
-
-      To
+      <label>To</label>
       <input type="text" [(ngModel)]="sendTo" />
       <br />
-      Amount
+      <label>Amount</label>
+      <br />
       <input type="number" [(ngModel)]="sendAmount" />
       <br />
       <br />
@@ -238,21 +238,23 @@
       <span class="method-name">method: qubic_signTransaction</span>
       <label>From</label>
       <input type="text" [(ngModel)]="sendFrom" />
-
-      To
+      <label>To</label>
       <input type="text" [(ngModel)]="sendTo" />
-
       <br />
-      Amount
+      <label>Amount</label>
+      <br />
       <input type="number" [(ngModel)]="sendAmount" />
       <br />
-      Tick
+      <label>Tick</label>
+      <br />
       <input type="number" [(ngModel)]="tick" />
       <br />
-      Input Type
+      <label>Input type</label>
+      <br />
       <input type="number" [(ngModel)]="inputType" />
       <br />
-      Payload
+      <label>Payload</label>
+      <br />
       <input type="text" [(ngModel)]="payload" />
       <br />
       <br />
@@ -265,19 +267,23 @@
       <span class="method-name">method: qubic_sendTransaction</span>
       <label>From</label>
       <input type="text" [(ngModel)]="sendFrom" />
-      To
+      <label>To</label>
       <input type="text" [(ngModel)]="sendTo" />
       <br />
-      Amount
+      <label>Amount</label>
+      <br />
       <input type="number" [(ngModel)]="sendAmount" />
       <br />
-      Tick
+      <label>Tick</label>
+      <br />
       <input type="number" [(ngModel)]="tick" />
       <br />
-      Input Type
+      <label>Input type</label>
+      <br />
       <input type="number" [(ngModel)]="inputType" />
       <br />
-      Payload
+      <label>Payload</label>
+      <br />
       <input type="text" [(ngModel)]="payload" />
       <br />
       <br />
@@ -295,6 +301,26 @@
       <br />
       <div style="display: flex; justify-content: center; align-items: center">
         <input type="button" value="Sign Message" (click)="signMessage()" />
+      </div>
+
+      <h2>Send Asset - WIP</h2>
+      <span class="method-name">method: qubic_sendAsset</span>
+      <label>From</label>
+      <input type="text" [(ngModel)]="sendFrom" />
+      <label>To</label>
+      <input type="text" [(ngModel)]="sendTo" />
+      <br />
+      <label>Asset name</label>
+      <br />
+      <input type="text" [(ngModel)]="sendAssetName" />
+      <br />
+      <label>Amount</label>
+      <br />
+      <input type="number" [(ngModel)]="sendAmount" />
+      <br />
+      <br />
+      <div style="display: flex; justify-content: center; align-items: center">
+        <input type="button" value="Send Asset" (click)="sendAsset()" />
       </div>
     </div>
 

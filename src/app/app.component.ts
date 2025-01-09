@@ -33,7 +33,7 @@ export class AppComponent {
   public tick: number | null = null;
   public inputType: number | null = null;
   public payload: string | null = null;
-
+  public sendAssetName: string | null = null;
   public signFrom: string | null = null;
   public signMessageString: string | null = null;
 
@@ -175,6 +175,30 @@ export class AppComponent {
           params: {
             from: this.sendFrom,
             to: this.sendTo,
+            amount: this.sendAmount,
+            nonce: new Date().getTime() + '',
+          },
+        },
+      });
+      this.logConsole('Result:');
+      this.logConsole(JSON.stringify(result));
+    } catch (e) {
+      this.logConsole('Error: ');
+      this.logConsole(JSON.stringify(e));
+    }
+  }
+
+  public async sendAsset() {
+    try {
+      const result = await this.signClient.request({
+        topic: this.sessionTopic,
+        chainId: this.chainId,
+        request: {
+          method: 'qubic_sendAsset',
+          params: {
+            from: this.sendFrom,
+            to: this.sendTo,
+            assetName: this.sendAssetName,
             amount: this.sendAmount,
             nonce: new Date().getTime() + '',
           },
