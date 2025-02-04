@@ -99,7 +99,7 @@ export class AppComponent {
             'qubic_sign',
           ],
           // Provide the session events that you wish to listen
-          events: ['amountChanged', 'tokenAmountChanged', 'accountsChanged'],
+          events: ['amountChanged', 'assetAmountChanged', 'accountsChanged'],
         },
       },
     });
