@@ -4,7 +4,7 @@ This example demonstrates how a dApp can interact with the Qubic Wallet via Wall
 
 For detailed information about WalletConnect integration with the Qubic Wallet, including supported methods, events, data structures, and error handling, please refer to the official Qubic Wallet documentation:
 
-[Qubic Wallet - WalletConnect Integration Details](https://github.com/qubic/wallet-app/blob/staging/walletconnect.md)
+[Qubic Wallet - WalletConnect Integration Details](https://github.com/qubic/wallet-app/blob/main/walletconnect.md)
 
 ## Installation
 
