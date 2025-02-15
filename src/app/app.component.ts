@@ -161,7 +161,7 @@ export class AppComponent {
       console.log(result);
     } catch (error) {
       this.logConsole('Failed to request accounts');
-      this.logConsole(JSON.stringify(error));
+      this.logConsole(String(error));
     }
   }
 
@@ -184,8 +184,8 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Error: ');
-      this.logConsole(JSON.stringify(e));
+      this.logConsole('Failed to send qubic');
+      this.logConsole(String(e));
     }
   }
 
@@ -209,8 +209,8 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Error: ');
-      this.logConsole(JSON.stringify(e));
+      this.logConsole('Failed to send asset');
+      this.logConsole(String(e));
     }
   }
 
@@ -236,8 +236,8 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Error: ');
-      this.logConsole(JSON.stringify(e));
+      this.logConsole('Failed to sign transaction');
+      this.logConsole(String(e));
     }
   }
 
@@ -262,8 +262,8 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Error: ');
-      this.logConsole(JSON.stringify(e));
+      this.logConsole('Failed to send transaction');
+      this.logConsole(String(e));
     }
   }
 
@@ -284,8 +284,8 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Error: ');
-      this.logConsole(JSON.stringify(e));
+      this.logConsole('Failed to sign message');
+      this.logConsole(String(e));
     }
   }
 
