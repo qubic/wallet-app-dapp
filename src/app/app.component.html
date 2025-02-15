@@ -193,15 +193,22 @@
       <label>Result</label>
       <br />
       <textarea readonly [value]="connectionURL" rows="5" cols="50"></textarea>
-      <small style="font-size: 8px" *ngIf="connectionURL !== ''">
-        <br />
-        <a href="qubic-wallet://pairwc/{{ connectionURL }}" target="_blank">qubic-wallet://pairwc/{{ connectionURL
-          }}</a>
-      </small>
+      <br />
       <br />
       <div style="display: flex; justify-content: center; align-items: center">
         <input type="button" value="Copy URL" (click)="copyUrl()" style="align-self: center" />
       </div>
+      <small style="font-size: 10px" *ngIf="connectionURL !== ''">
+        <br />
+        <a href="connectionDeepLink" target="_blank">{{ connectionDeepLink }}</a>
+        <br />
+        <br />
+        <div style="display: flex; justify-content: center; align-items: center">
+          <input type="button" value="Copy Deep Link URL" (click)="copyDeepLinkUrl()" style="align-self: center" />
+        </div>
+      </small>
+      <br />
+
       <br />
       <br />
       <img id="qrCodeImage" alt="QR Code will appear here" style="width: 400px; height: 400px" />

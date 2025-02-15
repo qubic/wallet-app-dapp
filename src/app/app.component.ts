@@ -22,6 +22,7 @@ export class AppComponent {
   myConsole = '';
 
   connectionURL = '';
+  connectionDeepLink = '';
   sessionTopic = '';
 
   method = 'qubic_requestAccounts';
@@ -83,6 +84,10 @@ export class AppComponent {
     this.copyToClipboard(this.connectionURL);
   }
 
+  public copyDeepLinkUrl() {
+    this.copyToClipboard(this.connectionDeepLink);
+  }
+
   public async genUrl() {
     const { uri, approval } = await this.signClient.connect({
       // Provide the namespaces
@@ -105,6 +110,7 @@ export class AppComponent {
     });
     this.logConsole('Generated URL: ' + uri);
     this.connectionURL = uri;
+    this.connectionDeepLink = "qubic-wallet://pairwc/" + this.connectionURL;
     this.generateQRCode(uri);
 
     this.logConsole('Awaiting for approval (click once)');
@@ -156,7 +162,7 @@ export class AppComponent {
           },
         },
       });
-      this.logConsole('Requested accounts:');
+      this.logConsole('qubic_requestAccounts response:');
       this.logConsole(JSON.stringify(result));
       console.log(result);
     } catch (error) {
