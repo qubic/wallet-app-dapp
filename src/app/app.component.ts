@@ -136,6 +136,20 @@ export class AppComponent {
     console.log('Session connected', sessionInfo);
   }
 
+  private handleError(context: string, error: unknown): void {
+    this.logConsole(`❌ Failed to ${context}`);
+
+    if (error instanceof Error) {
+      this.logConsole(error.message);
+    } else {
+      try {
+        this.logConsole(JSON.stringify(error, null, 2));
+      } catch {
+        this.logConsole(String(error));
+      }
+    }
+  }
+
   //Requests accounts from wallet
   public async requestAccounts() {
     if (!this.checkSessionStatus()) {
@@ -159,9 +173,8 @@ export class AppComponent {
       this.logConsole('Requested accounts:');
       this.logConsole(JSON.stringify(result));
       console.log(result);
-    } catch (error) {
-      this.logConsole('Failed to request accounts');
-      this.logConsole(String(error));
+    } catch (e) {
+      this.handleError('request accounts', e);
     }
   }
 
@@ -172,7 +185,7 @@ export class AppComponent {
         topic: this.sessionTopic,
         chainId: this.chainId,
         request: {
-          method: 'qubic_sendQubic',
+          method: 'qubic_sendQubics',
           params: {
             from: this.sendFrom,
             to: this.sendTo,
@@ -184,8 +197,7 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Failed to send qubic');
-      this.logConsole(String(e));
+      this.handleError('send qubic', e);
     }
   }
 
@@ -209,8 +221,7 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Failed to send asset');
-      this.logConsole(String(e));
+      this.handleError('send asset', e);
     }
   }
 
@@ -236,8 +247,7 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Failed to sign transaction');
-      this.logConsole(String(e));
+      this.handleError('sign transaction', e);
     }
   }
 
@@ -262,8 +272,7 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Failed to send transaction');
-      this.logConsole(String(e));
+      this.handleError('send transaction', e);
     }
   }
 
@@ -284,8 +293,7 @@ export class AppComponent {
       this.logConsole('Result:');
       this.logConsole(JSON.stringify(result));
     } catch (e) {
-      this.logConsole('Failed to sign message');
-      this.logConsole(String(e));
+      this.handleError('sign message', e);
     }
   }
 
