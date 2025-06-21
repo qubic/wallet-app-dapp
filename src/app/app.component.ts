@@ -26,7 +26,7 @@ export class AppComponent {
   sessionTopic = '';
 
   method = 'qubic_requestAccounts';
-  public chainId = 'qubic:main';
+  public chainId = 'qubic:mainnet';
 
   public sendFrom: string | null = null;
   public sendAmount: number | null = null;
