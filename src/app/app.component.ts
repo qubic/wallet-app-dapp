@@ -1,6 +1,6 @@
 import { FormsModule } from '@angular/forms';
 
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 
 import { RouterOutlet } from '@angular/router';
 import { SignClient } from '@walletconnect/sign-client';
@@ -16,6 +16,8 @@ import { CommonModule } from '@angular/common';
 })
 
 export class AppComponent {
+  @ViewChild('consoleTextarea') consoleTextarea?: ElementRef<HTMLTextAreaElement>;
+
   NO_ADDRESS = '000000000000000000000000000000000000000000000000000000000000';
 
   title = 'wconnectclient';
@@ -24,6 +26,10 @@ export class AppComponent {
   connectionURL = '';
   connectionDeepLink = '';
   sessionTopic = '';
+  sessionExpiry: number | null = null;
+  relayConnected = false;
+  isGeneratingUri = false;
+  isDisconnecting = false;
 
   method = 'qubic_requestAccounts';
   public chainId = 'qubic:mainnet';
@@ -41,8 +47,25 @@ export class AppComponent {
 
   private signClient: any;
   private approval: any;
+
+  private getTimestamp(): string {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    return `[${hours}:${minutes}:${seconds}]`;
+  }
+
   private logConsole(string = '') {
-    this.myConsole += string + '\n';
+    const timestamp = this.getTimestamp();
+    this.myConsole += `${timestamp} ${string}\n\n`;
+    // Scroll to bottom after Angular updates the view
+    setTimeout(() => {
+      if (this.consoleTextarea?.nativeElement) {
+        const textarea = this.consoleTextarea.nativeElement;
+        textarea.scrollTop = textarea.scrollHeight;
+      }
+    }, 0);
   }
 
   private clearConsole() {
@@ -61,10 +84,13 @@ export class AppComponent {
       ) as HTMLImageElement;
       if (imgElement) {
         imgElement.src = qrCodeDataURL; // Set the src attribute to the base64 QR code data
+        this.logConsole('QR code generated successfully');
+      } else {
+        this.logConsole('⚠️ QR code image element not found in DOM');
+        console.error('QR code image element not found');
       }
-
-      console.log('QR code generated and applied to img tag.');
     } catch (err) {
+      this.logConsole('❌ Failed to generate QR code');
       console.error('Failed to generate QR code', err);
     }
   };
@@ -89,40 +115,56 @@ export class AppComponent {
   }
 
   public async genUrl() {
-    const { uri, approval } = await this.signClient.connect({
-      // Provide the namespaces
-      requiredNamespaces: {
-        qubic: {
-          chains: [this.chainId],
-          methods: [
-            // Provide the methods that you wish to call
-            'qubic_requestAccounts',
-            'qubic_sendQubic',
-            'qubic_sendAsset',
-            'qubic_signTransaction',
-            'qubic_sendTransaction',
-            'qubic_sign',
-          ],
-          // Provide the session events that you wish to listen
-          events: ['amountChanged', 'assetAmountChanged', 'accountsChanged'],
-        },
-      },
-    });
-    this.logConsole('Generated URL: ' + uri);
-    this.connectionURL = uri;
-    this.connectionDeepLink = "qubic-wallet://pairwc/" + this.connectionURL;
-    this.generateQRCode(uri);
-
-    this.logConsole('Awaiting for approval (click once)');
+    this.isGeneratingUri = true;
     try {
-      const info = await approval();
-      console.log(info);
-      this.logConsole('Got approval');
-      this.handleSessionConnected(info);
-      this.logConsole(JSON.stringify(info));
-    } catch (e) {
-      this.logConsole('Approval was rejected:');
-      this.logConsole(JSON.stringify(e));
+      const { uri, approval } = await this.signClient.connect({
+        // Provide the namespaces
+        requiredNamespaces: {
+          qubic: {
+            chains: [this.chainId],
+            methods: [
+              // Provide the methods that you wish to call
+              'qubic_requestAccounts',
+              'qubic_sendQubic',
+              'qubic_sendAsset',
+              'qubic_signTransaction',
+              'qubic_sendTransaction',
+              'qubic_sign',
+            ],
+            // Provide the session events that you wish to listen
+            events: ['amountChanged', 'assetAmountChanged', 'accountsChanged'],
+          },
+        },
+      });
+      this.logConsole('Generated URL: ' + uri);
+      this.connectionURL = uri;
+      this.connectionDeepLink = "qubic-wallet://pairwc/" + this.connectionURL;
+
+      // Wait for Angular to render the DOM before generating QR code
+      setTimeout(async () => {
+        await this.generateQRCode(uri);
+        // After QR code is generated, show waiting message
+        this.logConsole('⏳ Waiting for wallet to approve connection...');
+      }, 0);
+
+      // URI generation is complete, hide loading state
+      this.isGeneratingUri = false;
+      try {
+        const info = await approval();
+        console.log(info);
+        this.logConsole('✓ Connection approved');
+        this.handleSessionConnected(info);
+        this.logConsole(JSON.stringify(info));
+      } catch (e) {
+        this.logConsole('❌ Approval was rejected:');
+        this.logConsole(JSON.stringify(e));
+        // Clear QR code and connection URLs to allow generating a new URI
+        this.clearQRCode();
+      }
+    } catch (error) {
+      this.isGeneratingUri = false;
+      this.logConsole('Failed to generate URI:');
+      this.logConsole(JSON.stringify(error));
     }
   }
 
@@ -138,8 +180,32 @@ export class AppComponent {
   public handleSessionConnected(sessionInfo: any) {
     this.logConsole('Connected. Topic is ' + sessionInfo.topic);
     this.sessionTopic = sessionInfo.topic;
+    this.sessionExpiry = sessionInfo.expiry;
     localStorage.setItem('sessionTopic', this.sessionTopic);
     console.log('Session connected', sessionInfo);
+  }
+
+  public getSessionExpiryTime(): string {
+    if (!this.sessionExpiry) return 'N/A';
+    const expiryDate = new Date(this.sessionExpiry * 1000);
+    return expiryDate.toLocaleString();
+  }
+
+  public getSessionTimeRemaining(): string {
+    if (!this.sessionExpiry) return 'N/A';
+    const now = Date.now();
+    const expiryMs = this.sessionExpiry * 1000;
+    const remainingMs = expiryMs - now;
+
+    if (remainingMs <= 0) return 'Expired';
+
+    const hours = Math.floor(remainingMs / (1000 * 60 * 60));
+    const minutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
   }
 
   private handleError(context: string, error: unknown): void {
@@ -336,7 +402,20 @@ export class AppComponent {
     this.clearConsole();
   }
 
+  private clearQRCode() {
+    // Clear the QR code image
+    const imgElement = document.getElementById('qrCodeImage') as HTMLImageElement;
+    if (imgElement) {
+      imgElement.src = '';
+    }
+    // Clear the connection URLs
+    this.connectionURL = '';
+    this.connectionDeepLink = '';
+    this.sessionExpiry = null;
+  }
+
   public async logout() {
+    this.isDisconnecting = true;
     try {
       if (!this.sessionTopic) {
         this.logConsole('sessionTopic is empty');
@@ -350,12 +429,17 @@ export class AppComponent {
         reason: { code: 6000, message: 'User logged out' },
       });
 
-      // Optionally clear local storage or session data
+      // Clear session data immediately
+      this.sessionTopic = '';
+      localStorage.removeItem('sessionTopic');
       localStorage.removeItem('walletconnect');
+      this.clearQRCode();
       this.logConsole('Successfully logged out');
     } catch (error: any) {
       this.logConsole('Failed to log out:');
       this.logConsole(error);
+    } finally {
+      this.isDisconnecting = false;
     }
   }
 
@@ -415,6 +499,7 @@ export class AppComponent {
         console.log('Session delete', payload);
         this.sessionTopic = '';
         localStorage.removeItem('sessionTopic');
+        this.clearQRCode();
       });
       this.signClient.on('session_expire', async (payload) => {
         this.logConsole('\nSession expire received');
@@ -422,6 +507,7 @@ export class AppComponent {
         console.log('Session expire', payload);
         this.sessionTopic = '';
         localStorage.removeItem('sessionTopic');
+        this.clearQRCode();
       });
       this.signClient.on('session_request', async (payload) => {
         this.logConsole('\nSession request received');
@@ -453,6 +539,25 @@ export class AppComponent {
         this.logConsole(JSON.stringify(payload));
         console.log('Session request expire', payload);
       });
+
+      // Listen for relay connection events
+      this.signClient.core.relayer.on('relayer_connect', () => {
+        this.relayConnected = true;
+        this.logConsole('\n✓ Relay connected');
+        console.log('Relay connected');
+      });
+
+      this.signClient.core.relayer.on('relayer_disconnect', () => {
+        this.relayConnected = false;
+        this.logConsole('\n✗ Relay disconnected');
+        console.log('Relay disconnected');
+      });
+
+      // Check initial relay connection state
+      if (this.signClient.core.relayer.connected) {
+        this.relayConnected = true;
+        this.logConsole('Relay already connected');
+      }
     });
   }
 }

@@ -1,358 +1,570 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
 <style>
   :host {
-    --bright-blue: oklch(51.01% 0.274 263.83);
-    --electric-violet: oklch(53.18% 0.28 296.97);
-    --french-violet: oklch(47.66% 0.246 305.88);
-    --vivid-pink: oklch(69.02% 0.277 332.77);
-    --hot-red: oklch(61.42% 0.238 15.34);
-    --orange-red: oklch(63.32% 0.24 31.68);
-
-    --gray-900: oklch(19.37% 0.006 300.98);
-    --gray-700: oklch(36.98% 0.014 302.71);
-    --gray-400: oklch(70.9% 0.015 304.04);
-
-    --red-to-pink-to-purple-vertical-gradient: linear-gradient(180deg,
-        var(--orange-red) 0%,
-        var(--vivid-pink) 50%,
-        var(--electric-violet) 100%);
-
-    --red-to-pink-to-purple-horizontal-gradient: linear-gradient(90deg,
-        var(--orange-red) 0%,
-        var(--vivid-pink) 50%,
-        var(--electric-violet) 100%);
-
-    --pill-accent: var(--bright-blue);
+    --primary-color: #1a73e8;
+    --border-color: #e0e0e0;
+    --card-bg: #ffffff;
+    --text-primary: #202124;
+    --text-secondary: #5f6368;
+    --hover-bg: #f8f9fa;
 
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-      "Segoe UI Symbol";
+      Helvetica, Arial, sans-serif;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1 {
-    font-size: 3.125rem;
-    color: var(--gray-900);
-    font-weight: 500;
-    line-height: 100%;
-    letter-spacing: -0.125rem;
-    margin: 0;
-    font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI",
-      Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
-      "Segoe UI Emoji", "Segoe UI Symbol";
+  * {
+    box-sizing: border-box;
   }
 
-  p {
-    margin: 0;
-    color: var(--gray-700);
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
   }
 
-  main {
-    width: 100%;
-    min-height: 100%;
+  .header {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 1rem;
-    box-sizing: inherit;
-    position: relative;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 24px;
   }
 
-  .angular-logo {
-    max-width: 9.2rem;
+  .logo {
+    height: 48px;
+    width: auto;
   }
 
-  .content {
+  h1 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 20px;
+  }
+
+  .methods-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    align-content: start;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .card h3 {
+    margin: 0 0 4px 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+  }
+
+  .card-header {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .card-header h3 {
+    margin: 0;
+  }
+
+  .status-group {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .method-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    font-family: monospace;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+
+  .form-group input,
+  .form-group textarea {
     width: 100%;
-    max-width: 700px;
-    margin-bottom: 3rem;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-family: inherit;
   }
 
-  .content h1 {
-    margin-top: 1.75rem;
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
   }
 
-  .content p {
-    margin-top: 1.5rem;
+  button,
+  input[type="button"] {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    width: 100%;
+    transition: background 0.2s;
   }
 
-  .divider {
-    width: 1px;
-    background: var(--red-to-pink-to-purple-vertical-gradient);
-    margin-inline: 0.5rem;
+  button:hover:not(:disabled),
+  input[type="button"]:hover:not(:disabled) {
+    background: #1557b0;
   }
 
-  .pill-group {
+  button:disabled,
+  input[type="button"]:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .connection-card {
+    grid-column: 1 / -1;
+  }
+
+  .connection-form {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+
+  .connection-form .form-group {
+    flex: 0 0 250px;
+    margin-bottom: 0;
+  }
+
+  .connection-form button {
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .qr-section {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-top: 12px;
+  }
+
+  .qr-container {
     display: flex;
     flex-direction: column;
-    align-items: start;
-    flex-wrap: wrap;
-    gap: 1.25rem;
+    align-items: center;
+    gap: 8px;
   }
 
-  .pill {
-    display: flex;
-    align-items: center;
-    --pill-accent: var(--bright-blue);
-    background: color-mix(in srgb, var(--pill-accent) 5%, transparent);
-    color: var(--pill-accent);
-    padding-inline: 0.75rem;
-    padding-block: 0.375rem;
-    border-radius: 2.75rem;
-    border: 0;
-    transition: background 0.3s ease;
-    font-family: var(--inter-font);
-    font-size: 0.875rem;
-    font-style: normal;
+  .qr-section img {
+    width: 200px;
+    height: 200px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+  }
+
+  .qr-instruction {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin: 0;
+    max-width: 200px;
+  }
+
+  .qr-details {
+    flex: 1;
+  }
+
+  .connection-string-group {
+    margin-bottom: 16px;
+  }
+
+  .connection-string-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .connection-string-group label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
     font-weight: 500;
-    line-height: 1.4rem;
-    letter-spacing: -0.00875rem;
-    text-decoration: none;
+    margin-bottom: 6px;
   }
 
-  .pill:hover {
-    background: color-mix(in srgb, var(--pill-accent) 15%, transparent);
+  .connection-string {
+    background: #f5f5f5;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-family: monospace;
+    font-size: 0.7rem;
+    word-break: break-all;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    max-height: 80px;
+    overflow-y: auto;
+    user-select: all;
   }
 
-  .pill-group .pill:nth-child(6n + 1) {
-    --pill-accent: var(--bright-blue);
+  .copy-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
   }
 
-  .pill-group .pill:nth-child(6n + 2) {
-    --pill-accent: var(--french-violet);
-  }
-
-  .pill-group .pill:nth-child(6n + 3),
-  .pill-group .pill:nth-child(6n + 4),
-  .pill-group .pill:nth-child(6n + 5) {
-    --pill-accent: var(--hot-red);
-  }
-
-  .pill-group svg {
-    margin-inline-start: 0.25rem;
-  }
-
-  .social-links {
-    display: flex;
+  .status-indicator {
+    display: inline-flex;
     align-items: center;
-    gap: 0.73rem;
-    margin-top: 1.5rem;
+    gap: 6px;
+    font-size: 0.75rem;
   }
 
-  .social-links path {
-    transition: fill 0.3s ease;
-    fill: var(--gray-400);
+  .status-value {
+    color: var(--text-secondary);
+    font-weight: 500;
   }
 
-  .social-links a:hover svg path {
-    fill: var(--gray-900);
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #9ca3af;
   }
 
-  @media screen and (max-width: 650px) {
-    .content {
-      flex-direction: column;
-      width: max-content;
+  .status-dot.active {
+    background: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  }
+
+  .status-dot.inactive {
+    background: #ef4444;
+  }
+
+  .console-panel {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    max-height: calc(100vh - 40px);
+  }
+
+  .console-panel textarea {
+    width: 100%;
+    height: calc(100vh - 120px);
+    min-height: 400px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 0.75rem;
+    resize: none;
+    background: #fafafa;
+  }
+
+  .console-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .console-header h3 {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .console-header button {
+    width: auto;
+    padding: 6px 16px;
+  }
+
+  @media (max-width: 1200px) {
+    .layout {
+      grid-template-columns: 1fr;
     }
 
-    .divider {
-      height: 1px;
+    .console-panel {
+      position: static;
+    }
+
+    .console-panel textarea {
+      height: 400px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .logo {
+      height: 40px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    .methods-container {
+      grid-template-columns: 1fr;
+    }
+
+    .qr-section {
+      flex-direction: column;
+    }
+
+    .qr-container {
       width: 100%;
-      background: var(--red-to-pink-to-purple-horizontal-gradient);
-      margin-block: 1.5rem;
+    }
+
+    .qr-section img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
+    }
+
+    .qr-instruction {
+      max-width: 100%;
     }
   }
 </style>
 
-<main class="main">
-  <h1>WalletConnect Qubic Wallet Demo</h1>
-</main>
-<main class="main">
-  <div class="content">
-    <div class="left-side" style="flex: 1">
-      <h2>Generate URL</h2>
-      <h3>Chain Id</h3>
-      <input type="text" [(ngModel)]="chainId" />
-      <br />
-      <br />
-      <div style="display: flex; justify-content: center; align-items: center">
-        <input type="button" value="Generate URL" (click)="genUrl()" class="align-self:center" />
-      </div>
-      <br />
-      <label>Result</label>
-      <br />
-      <textarea readonly [value]="connectionURL" rows="5" cols="50"></textarea>
-      <br />
-      <br />
-      <div style="display: flex; justify-content: center; align-items: center">
-        <input type="button" value="Copy URL" (click)="copyUrl()" style="align-self: center"
-          [disabled]="this.connectionURL.length < 1" />
-      </div>
-      <small style="font-size: 10px" *ngIf="connectionURL !== ''">
-        <br />
-        <a href="connectionDeepLink" target="_blank">{{ connectionDeepLink }}</a>
-        <br />
-        <br />
-        <div style="display: flex; justify-content: center; align-items: center">
-          <input type="button" value="Copy Deep Link URL" (click)="copyDeepLinkUrl()" style="align-self: center" />
+<div class="container">
+  <div class="header">
+    <img src="qubic-logo.png" alt="Qubic Logo" class="logo" />
+    <h1>Qubic dApp - WalletConnect Demo</h1>
+  </div>
+
+  <div class="layout">
+    <!-- Left side: Methods -->
+    <div class="methods-container">
+      <!-- Connection Card -->
+      <div class="card connection-card">
+        <div class="card-header">
+          <h3>Connection</h3>
+          <div class="status-group">
+            <span class="status-indicator">
+              <span class="status-dot" [class.active]="relayConnected"></span>
+              <span class="status-value">Relay</span>
+            </span>
+            <span class="status-indicator">
+              <span class="status-dot" [class.active]="sessionIsActive()"></span>
+              <span class="status-value">Session</span>
+            </span>
+          </div>
         </div>
-      </small>
-      <br />
 
-      <br />
-      <br />
-      <img id="qrCodeImage" alt="QR Code will appear here" style="width: 400px; height: 400px" />
-      <h2>Logout</h2>
-      <div style="display: flex; justify-content: center; align-items: center">
+        <div class="connection-form" *ngIf="!sessionIsActive()">
+          <div class="form-group">
+            <label>Chain ID</label>
+            <input type="text" [(ngModel)]="chainId" [disabled]="isGeneratingUri" />
+          </div>
+          <button (click)="genUrl()" [disabled]="isGeneratingUri">
+            {{ isGeneratingUri ? 'Generating...' : 'Generate New Pairing URI' }}
+          </button>
+        </div>
 
-        <input type="button" value="Logout" (click)="logout()" [disabled]="sessionIsActive() === false" />
-      </div> <br />
+        <div class="qr-section" *ngIf="connectionURL && !sessionIsActive()">
+          <div class="qr-container">
+            <img id="qrCodeImage" alt="QR Code" />
+            <p class="qr-instruction">Scan the QR code with your Qubic Wallet to approve</p>
+          </div>
+          <div class="qr-details">
+            <div class="connection-string-group">
+              <label>WalletConnect URI</label>
+              <div class="connection-string">{{ connectionURL }}</div>
+              <button (click)="copyUrl()" class="copy-btn">Copy WalletConnect URI</button>
+            </div>
 
+            <div class="connection-string-group" *ngIf="connectionDeepLink">
+              <label>Deep Link</label>
+              <div class="connection-string">{{ connectionDeepLink }}</div>
+              <button (click)="copyDeepLinkUrl()" class="copy-btn">Copy Deep Link</button>
+            </div>
+          </div>
+        </div>
 
-
-      <h2>Request Accounts</h2>
-      <span class="method-name">method: qubic_requestAccounts</span>
-
-      <div style="display: flex; justify-content: center; align-items: center">
-        <input type="button" value="Request Accounts" (click)="requestAccounts()" />
-      </div>
-      <h2>Send Qubic</h2>
-      <span class="method-name">method: qubic_sendQubic</span>
-      <label>From</label>
-      <input type="text" [(ngModel)]="sendFrom" />
-      <label>To</label>
-      <input type="text" [(ngModel)]="sendTo" />
-      <br />
-      <label>Amount</label>
-      <br />
-      <input type="number" [(ngModel)]="sendAmount" />
-      <br />
-      <br />
-      <div style="display: flex; justify-content: center; align-items: center">
-        <input type="button" value="Send Qubic" (click)="sendQubic()" />
-      </div>
-      <h2>Sign Transaction</h2>
-      <span class="method-name">method: qubic_signTransaction</span>
-      <label>From</label>
-      <input type="text" [(ngModel)]="sendFrom" />
-      <label>To</label>
-      <input type="text" [(ngModel)]="sendTo" />
-      <br />
-      <label>Amount</label>
-      <br />
-      <input type="number" [(ngModel)]="sendAmount" />
-      <br />
-      <label>Tick</label>
-      <br />
-      <input type="number" [(ngModel)]="tick" />
-      <br />
-      <label>Input type</label>
-      <br />
-      <input type="number" [(ngModel)]="inputType" />
-      <br />
-      <label>Payload</label>
-      <br />
-      <input type="text" [(ngModel)]="payload" />
-      <br />
-      <br />
-      <div style="display: flex; justify-content: center; align-items: center">
-
-        <input type="button" value="Sign Transaction" (click)="signTransaction()" />
+        <div class="form-group" style="margin-top: 16px;" *ngIf="sessionIsActive()">
+          <button (click)="logout()" [disabled]="isDisconnecting">
+            {{ isDisconnecting ? 'Disconnecting...' : 'Disconnect Session' }}
+          </button>
+        </div>
       </div>
 
-      <h2>Send Transaction</h2>
-      <span class="method-name">method: qubic_sendTransaction</span>
-      <label>From</label>
-      <input type="text" [(ngModel)]="sendFrom" />
-      <label>To</label>
-      <input type="text" [(ngModel)]="sendTo" />
-      <br />
-      <label>Amount</label>
-      <br />
-      <input type="number" [(ngModel)]="sendAmount" />
-      <br />
-      <label>Tick</label>
-      <br />
-      <input type="number" [(ngModel)]="tick" />
-      <br />
-      <label>Input type</label>
-      <br />
-      <input type="number" [(ngModel)]="inputType" />
-      <br />
-      <label>Payload</label>
-      <br />
-      <input type="text" [(ngModel)]="payload" />
-      <br />
-      <br />
-      <div style="display: flex; justify-content: center; align-items: center">
-        <input type="button" value="Send Transaction" (click)="sendTransaction()" />
-      </div>
-      <h2>Sign Message</h2>
-      <span class="method-name">method: qubic_sign</span>
-      <label>Sign from</label>
-      <input type="text" [(ngModel)]="sendFrom" />
-      <label>Sign message</label>
-      <br />
-      <textarea [(ngModel)]="signMessageString" style="resize: vertical; width: 100%"></textarea>
-      <br />
-      <br />
-      <div style="display: flex; justify-content: center; align-items: center">
-        <input type="button" value="Sign Message" (click)="signMessage()" />
+      <!-- Request Accounts -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Request Accounts</h3>
+          <span class="method-label">qubic_requestAccounts</span>
+        </div>
+        <button (click)="requestAccounts()">Request Accounts</button>
       </div>
 
-      <h2>Send Asset</h2>
-      <span class="method-name">method: qubic_sendAsset</span>
-      <label>From</label>
-      <input type="text" [(ngModel)]="sendFrom" />
-      <label>To</label>
-      <input type="text" [(ngModel)]="sendTo" />
-      <br />
-      <label>Asset name</label>
-      <br />
-      <input type="text" [(ngModel)]="sendAssetName" />
-      <br />
-      <label>Issuer</label>
-      <br />
-      <input type="text" [(ngModel)]="sendAssetIssuer" />
-      <br />
-      <label>Amount</label>
-      <br />
-      <input type="number" [(ngModel)]="sendAmount" />
-      <br />
-      <br />
-      <div style="display: flex; justify-content: center; align-items: center">
-        <input type="button" value="Send Asset" (click)="sendAsset()" />
+      <!-- Send Qubic -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Send Qubic</h3>
+          <span class="method-label">qubic_sendQubic</span>
+        </div>
+        <div class="form-group">
+          <label>From</label>
+          <input type="text" [(ngModel)]="sendFrom" placeholder="Sender address" />
+        </div>
+        <div class="form-group">
+          <label>To</label>
+          <input type="text" [(ngModel)]="sendTo" placeholder="Recipient address" />
+        </div>
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" [(ngModel)]="sendAmount" placeholder="Amount" />
+        </div>
+        <button (click)="sendQubic()">Send Qubic</button>
+      </div>
+
+      <!-- Send Asset -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Send Asset</h3>
+          <span class="method-label">qubic_sendAsset</span>
+        </div>
+        <div class="form-group">
+          <label>From</label>
+          <input type="text" [(ngModel)]="sendFrom" placeholder="Sender address" />
+        </div>
+        <div class="form-group">
+          <label>To</label>
+          <input type="text" [(ngModel)]="sendTo" placeholder="Recipient address" />
+        </div>
+        <div class="form-group">
+          <label>Asset Name</label>
+          <input type="text" [(ngModel)]="sendAssetName" placeholder="Asset name" />
+        </div>
+        <div class="form-group">
+          <label>Issuer</label>
+          <input type="text" [(ngModel)]="sendAssetIssuer" placeholder="Issuer address" />
+        </div>
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" [(ngModel)]="sendAmount" placeholder="Amount" />
+        </div>
+        <button (click)="sendAsset()">Send Asset</button>
+      </div>
+
+      <!-- Sign Transaction -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Sign Transaction</h3>
+          <span class="method-label">qubic_signTransaction</span>
+        </div>
+        <div class="form-group">
+          <label>From</label>
+          <input type="text" [(ngModel)]="sendFrom" placeholder="Sender address" />
+        </div>
+        <div class="form-group">
+          <label>To</label>
+          <input type="text" [(ngModel)]="sendTo" placeholder="Recipient address" />
+        </div>
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" [(ngModel)]="sendAmount" placeholder="Amount" />
+        </div>
+        <div class="form-group">
+          <label>Tick</label>
+          <input type="number" [(ngModel)]="tick" placeholder="Tick" />
+        </div>
+        <div class="form-group">
+          <label>Input Type</label>
+          <input type="number" [(ngModel)]="inputType" placeholder="Input type" />
+        </div>
+        <div class="form-group">
+          <label>Payload</label>
+          <input type="text" [(ngModel)]="payload" placeholder="Payload (optional)" />
+        </div>
+        <button (click)="signTransaction()">Sign Transaction</button>
+      </div>
+
+      <!-- Send Transaction -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Send Transaction</h3>
+          <span class="method-label">qubic_sendTransaction</span>
+        </div>
+        <div class="form-group">
+          <label>From</label>
+          <input type="text" [(ngModel)]="sendFrom" placeholder="Sender address" />
+        </div>
+        <div class="form-group">
+          <label>To</label>
+          <input type="text" [(ngModel)]="sendTo" placeholder="Recipient address" />
+        </div>
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" [(ngModel)]="sendAmount" placeholder="Amount" />
+        </div>
+        <div class="form-group">
+          <label>Tick</label>
+          <input type="number" [(ngModel)]="tick" placeholder="Tick" />
+        </div>
+        <div class="form-group">
+          <label>Input Type</label>
+          <input type="number" [(ngModel)]="inputType" placeholder="Input type" />
+        </div>
+        <div class="form-group">
+          <label>Payload</label>
+          <input type="text" [(ngModel)]="payload" placeholder="Payload (optional)" />
+        </div>
+        <button (click)="sendTransaction()">Send Transaction</button>
+      </div>
+
+      <!-- Sign Message -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Sign Message</h3>
+          <span class="method-label">qubic_sign</span>
+        </div>
+        <div class="form-group">
+          <label>From</label>
+          <input type="text" [(ngModel)]="sendFrom" placeholder="Signer address" />
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea [(ngModel)]="signMessageString" rows="3" placeholder="Message to sign"></textarea>
+        </div>
+        <button (click)="signMessage()">Sign Message</button>
       </div>
     </div>
 
-    <div class="right-side" style="flex: 1; margin-left: 24px">
-      <textarea readonly style="width: 100%; min-height: 600px; min-width: 400px" [value]="myConsole"></textarea>
-      <div style="display: flex; justify-content: center; align-items: center">
-
-        <!-- Clear Button -->
-        <input type="button" value="Clear" (click)="clear()" />
+    <!-- Right side: Console -->
+    <div class="console-panel">
+      <div class="console-header">
+        <h3>Console</h3>
+        <button (click)="clear()">Clear</button>
       </div>
+      <textarea #consoleTextarea readonly [value]="myConsole"></textarea>
     </div>
   </div>
-</main>
-
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+</div>
 
 <router-outlet />
