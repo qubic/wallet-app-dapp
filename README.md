@@ -14,14 +14,17 @@ Specifically, this example:
 - Does not use strict TypeScript typing or comprehensive type safety
 - Does not dictate how to properly handle errors in a production environment
 - Does not implement comprehensive session management as recommended by Reown (session restoration, expiry handling, multi-session support, etc.)
+- **Does not connect to Qubic RPC endpoints**, which production dApps usually would integrate for:
+  - Getting current tick information
+  - Fetching account balances
+  - Verifying transaction status
 - Does not include production features such as:
   - Input validation and sanitization
   - User-friendly error messages and loading states
-  - Proper state management solutions
   - Retry logic and network error handling
   - Comprehensive testing (unit, integration, E2E)
   - Analytics and error monitoring
-- Is intended solely for demonstrating method calls and events triggered by the wallet
+- Is intended solely for demonstrating method calls and events available for Wallet connect integration
 
 For production implementations, please refer to:
 - **Qubic Wallet WalletConnect Integration**: [https://github.com/qubic/wallet-app/blob/main/walletconnect.md](https://github.com/qubic/wallet-app/blob/main/walletconnect.md)
