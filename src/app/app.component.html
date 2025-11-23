@@ -395,13 +395,15 @@
             <div class="connection-string-group">
               <label>WalletConnect URI</label>
               <div class="connection-string">{{ connectionURL }}</div>
-              <button (click)="copyUrl()" class="copy-btn">Copy WalletConnect URI</button>
+              <button *ngIf="!urlCopied" (click)="copyUrl()" class="copy-btn">Copy WalletConnect URI</button>
+              <span *ngIf="urlCopied" style="color: #47CD89; font-size: 0.875rem; font-weight: 500;">✓ Copied!</span>
             </div>
 
             <div class="connection-string-group" *ngIf="connectionDeepLink">
               <label>Deep Link</label>
               <div class="connection-string">{{ connectionDeepLink }}</div>
-              <button (click)="copyDeepLinkUrl()" class="copy-btn">Copy Deep Link</button>
+              <button *ngIf="!deepLinkCopied" (click)="copyDeepLinkUrl()" class="copy-btn">Copy Deep Link</button>
+              <span *ngIf="deepLinkCopied" style="color: #47CD89; font-size: 0.875rem; font-weight: 500;">✓ Copied!</span>
             </div>
           </div>
         </div>
@@ -560,7 +562,11 @@
     <div class="console-panel">
       <div class="console-header">
         <h3>Console</h3>
-        <button (click)="clear()">Clear</button>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button *ngIf="!consoleCopied" (click)="copyConsoleText()">Copy Console</button>
+          <span *ngIf="consoleCopied" style="color: #47CD89; font-size: 0.875rem; font-weight: 500;">✓ Copied!</span>
+          <button (click)="clear()">Clear</button>
+        </div>
       </div>
       <textarea #consoleTextarea readonly [value]="myConsole"></textarea>
     </div>

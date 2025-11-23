@@ -19,6 +19,7 @@ export class AppComponent {
   @ViewChild('consoleTextarea') consoleTextarea?: ElementRef<HTMLTextAreaElement>;
 
   NO_ADDRESS = '000000000000000000000000000000000000000000000000000000000000';
+  COPIED_MESSAGE_DURATION = 1000; // Duration in ms to show "Copied" message
 
   title = 'wconnectclient';
   myConsole = '';
@@ -30,6 +31,9 @@ export class AppComponent {
   relayConnected = false;
   isGeneratingUri = false;
   isDisconnecting = false;
+  urlCopied = false;
+  deepLinkCopied = false;
+  consoleCopied = false;
 
   method = 'qubic_requestAccounts';
   public chainId = 'qubic:mainnet';
@@ -84,7 +88,7 @@ export class AppComponent {
       ) as HTMLImageElement;
       if (imgElement) {
         imgElement.src = qrCodeDataURL; // Set the src attribute to the base64 QR code data
-        this.logConsole('QR code generated successfully');
+        this.logConsole('✅ QR code generated successfully');
       } else {
         this.logConsole('⚠️ QR code image element not found in DOM');
         console.error('QR code image element not found');
@@ -108,10 +112,26 @@ export class AppComponent {
 
   public copyUrl() {
     this.copyToClipboard(this.connectionURL);
+    this.urlCopied = true;
+    setTimeout(() => {
+      this.urlCopied = false;
+    }, this.COPIED_MESSAGE_DURATION);
   }
 
   public copyDeepLinkUrl() {
     this.copyToClipboard(this.connectionDeepLink);
+    this.deepLinkCopied = true;
+    setTimeout(() => {
+      this.deepLinkCopied = false;
+    }, this.COPIED_MESSAGE_DURATION);
+  }
+
+  public copyConsoleText() {
+    this.copyToClipboard(this.myConsole);
+    this.consoleCopied = true;
+    setTimeout(() => {
+      this.consoleCopied = false;
+    }, this.COPIED_MESSAGE_DURATION);
   }
 
   public async genUrl() {
@@ -136,7 +156,7 @@ export class AppComponent {
           },
         },
       });
-      this.logConsole('Generated URL: ' + uri);
+      this.logConsole('🔗 Generated URL: ' + uri);
       this.connectionURL = uri;
       this.connectionDeepLink = "qubic-wallet://pairwc/" + this.connectionURL;
 
@@ -152,33 +172,29 @@ export class AppComponent {
       try {
         const info = await approval();
         console.log(info);
-        this.logConsole('✓ Connection approved');
+        this.logConsole('✓ Connection approved\n' + JSON.stringify(info, null, 2));
         this.handleSessionConnected(info);
-        this.logConsole(JSON.stringify(info));
       } catch (e) {
-        this.logConsole('❌ Approval was rejected:');
-        this.logConsole(JSON.stringify(e));
+        this.logConsole('❌ Approval was rejected\n' + JSON.stringify(e, null, 2));
         // Clear QR code and connection URLs to allow generating a new URI
         this.clearQRCode();
       }
     } catch (error) {
       this.isGeneratingUri = false;
-      this.logConsole('Failed to generate URI:');
-      this.logConsole(JSON.stringify(error));
+      this.logConsole('❌ Failed to generate URI\n' + JSON.stringify(error, null, 2));
     }
   }
 
   public async approve() {
-    this.logConsole('Awaiting for approval (click once)');
+    this.logConsole('⏳ Awaiting for approval on the wallet app');
     const session = await this.approval();
 
-    this.logConsole('Got approval');
-    this.logConsole(JSON.stringify(session));
+    this.logConsole('✅ Got approval\n' + JSON.stringify(session, null, 2));
     this.handleSessionConnected(session);
   }
 
   public handleSessionConnected(sessionInfo: any) {
-    this.logConsole('Connected. Topic is ' + sessionInfo.topic);
+    this.logConsole('🔗 Connected. Topic is ' + sessionInfo.topic);
     this.sessionTopic = sessionInfo.topic;
     this.sessionExpiry = sessionInfo.expiry;
     localStorage.setItem('sessionTopic', this.sessionTopic);
@@ -208,24 +224,55 @@ export class AppComponent {
     return `${minutes}m`;
   }
 
-  private handleError(context: string, error: unknown): void {
-    this.logConsole(`❌ Failed to ${context}`);
-
-    if (error instanceof Error) {
-      this.logConsole(error.message);
-    } else {
-      try {
-        this.logConsole(JSON.stringify(error, null, 2));
-      } catch {
-        this.logConsole(String(error));
+  private handleError(error: unknown): void {
+    // Extract the calling method name from the stack trace
+    let callerName = 'unknown';
+    try {
+      const stack = new Error().stack;
+      if (stack) {
+        const stackLines = stack.split('\n');
+        // stackLines[0] is "Error", stackLines[1] is handleError, stackLines[2] is the caller
+        const callerLine = stackLines[2];
+        const match = callerLine.match(/at\s+(?:.*\.)?(\w+)\s+/);
+        if (match && match[1]) {
+          callerName = match[1];
+        }
       }
+    } catch {
+      // If we can't get the caller name, use 'unknown'
     }
+
+    let errorDetails: string;
+
+    try {
+      if (error instanceof Error) {
+        // Convert Error object to plain object to capture all properties
+        const errorObj: any = {
+          name: error.name,
+          message: error.message,
+          stack: error.stack
+        };
+        // Capture any additional properties
+        Object.keys(error).forEach(key => {
+          errorObj[key] = (error as any)[key];
+        });
+        errorDetails = JSON.stringify(errorObj, null, 2);
+      } else {
+        // Try to stringify any other type of error
+        errorDetails = JSON.stringify(error, null, 2);
+      }
+    } catch {
+      // Final fallback if JSON.stringify fails
+      errorDetails = String(error);
+    }
+
+    this.logConsole(`❌ Failed in ${callerName}\n${errorDetails}`);
   }
 
   //Requests accounts from wallet
   public async requestAccounts() {
     if (!this.sessionIsActive()) {
-      this.logConsole('Cannot request accounts. No active session.');
+      this.logConsole('⚠️ Cannot request accounts. No active session.');
       return;
     }
     try {
@@ -242,11 +289,10 @@ export class AppComponent {
           },
         },
       });
-      this.logConsole('qubic_requestAccounts response:');
-      this.logConsole(JSON.stringify(result));
+      this.logConsole('📋 qubic_requestAccounts response\n' + JSON.stringify(result, null, 2));
       console.log(result);
     } catch (e) {
-      this.handleError('request accounts', e);
+      this.handleError(e);
     }
   }
 
@@ -266,10 +312,9 @@ export class AppComponent {
           },
         },
       });
-      this.logConsole('Result:');
-      this.logConsole(JSON.stringify(result));
+      this.logConsole('📄 Result\n' + JSON.stringify(result, null, 2));
     } catch (e) {
-      this.handleError('send qubic', e);
+      this.handleError(e);
     }
   }
 
@@ -290,10 +335,9 @@ export class AppComponent {
           },
         },
       });
-      this.logConsole('Result:');
-      this.logConsole(JSON.stringify(result));
+      this.logConsole('📄 Result\n' + JSON.stringify(result, null, 2));
     } catch (e) {
-      this.handleError('send asset', e);
+      this.handleError(e);
     }
   }
 
@@ -316,10 +360,9 @@ export class AppComponent {
           },
         },
       });
-      this.logConsole('Result:');
-      this.logConsole(JSON.stringify(result));
+      this.logConsole('📄 Result\n' + JSON.stringify(result, null, 2));
     } catch (e) {
-      this.handleError('sign transaction', e);
+      this.handleError(e);
     }
   }
 
@@ -341,10 +384,9 @@ export class AppComponent {
           },
         },
       });
-      this.logConsole('Result:');
-      this.logConsole(JSON.stringify(result));
+      this.logConsole('📄 Result\n' + JSON.stringify(result, null, 2));
     } catch (e) {
-      this.handleError('send transaction', e);
+      this.handleError(e);
     }
   }
 
@@ -362,10 +404,9 @@ export class AppComponent {
           },
         },
       });
-      this.logConsole('Result:');
-      this.logConsole(JSON.stringify(result));
+      this.logConsole('📄 Result\n' + JSON.stringify(result, null, 2));
     } catch (e) {
-      this.handleError('sign message', e);
+      this.handleError(e);
     }
   }
 
@@ -382,14 +423,14 @@ export class AppComponent {
         return true;
       } else {
         // Session has expired
-        this.logConsole('Session has expired.');
+        this.logConsole('⏰ Session has expired.');
         this.sessionTopic = '';
         localStorage.removeItem('sessionTopic');
         return false;
       }
     } else {
       // Session does not exist
-      this.logConsole('Session is not connected.');
+      this.logConsole('⚠️ Session is not connected.');
       // Clean up session data
       this.sessionTopic = '';
       localStorage.removeItem('sessionTopic');
@@ -418,11 +459,11 @@ export class AppComponent {
     this.isDisconnecting = true;
     try {
       if (!this.sessionTopic) {
-        this.logConsole('sessionTopic is empty');
+        this.logConsole('⚠️ sessionTopic is empty');
         return;
       }
 
-      this.logConsole('App will call disconnect');
+      this.logConsole('🔌 Disconnecting session...');
 
       await this.signClient.disconnect({
         topic: this.sessionTopic,
@@ -434,17 +475,16 @@ export class AppComponent {
       localStorage.removeItem('sessionTopic');
       localStorage.removeItem('walletconnect');
       this.clearQRCode();
-      this.logConsole('Successfully logged out');
+      this.logConsole('✅ Successfully disconnected');
     } catch (error: any) {
-      this.logConsole('Failed to log out:');
-      this.logConsole(error);
+      this.logConsole('❌ Failed to disconnect\n' + (error instanceof Error ? error.message : JSON.stringify(error, null, 2)));
     } finally {
       this.isDisconnecting = false;
     }
   }
 
   constructor() {
-    this.logConsole('Initializing Wallet Connect Client');
+    this.logConsole('🔄 Initializing WalletConnect Client');
 
     SignClient.init({
       projectId: 'b2ace378845f0e4806ef23d2732f77a4',
@@ -456,7 +496,7 @@ export class AppComponent {
       },
     }).then((value) => {
       this.signClient = value;
-      this.logConsole('Initialized ' + this.signClient);
+      this.logConsole('✓ WalletConnect SignClient initialized successfully');
 
       const storedSessionTopic = localStorage.getItem('sessionTopic');
       const sessions = this.signClient.session.getAll();
@@ -465,7 +505,7 @@ export class AppComponent {
         // find the session with the stored topic
         const session = sessions.find((s: { topic: string; }) => s.topic === storedSessionTopic);
         if (session) {
-          this.logConsole('Restored session from local storage');
+          this.logConsole('🔄 Restored session from local storage');
           this.handleSessionConnected(session);
         } else {
           // if the session is not found, remove the invalid topic
@@ -474,89 +514,77 @@ export class AppComponent {
       }
 
       this.signClient.on('session_proposal', async (payload) => {
-        this.logConsole('\nSession proposal received');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('📨 Session proposal received\n' + JSON.stringify(payload, null, 2));
         console.log('Proposal received', payload);
       });
       this.signClient.on('session_update', async (payload) => {
-        this.logConsole('\nSession update received');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('🔄 Session update received\n' + JSON.stringify(payload, null, 2));
         console.log('Session update', payload);
       });
       this.signClient.on('session_extend', async (payload) => {
-        this.logConsole('\nSession extend received');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('⏱️ Session extend received\n' + JSON.stringify(payload, null, 2));
         console.log('Session extend', payload);
       });
       this.signClient.on('session_ping', async (payload) => {
-        this.logConsole('\nSession ping received');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('🏓 Session ping received\n' + JSON.stringify(payload, null, 2));
         console.log('Session ping', payload);
       });
       this.signClient.on('session_delete', async (payload) => {
-        this.logConsole('\nSession delete received');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('🗑️ Session delete received\n' + JSON.stringify(payload, null, 2));
         console.log('Session delete', payload);
         this.sessionTopic = '';
         localStorage.removeItem('sessionTopic');
         this.clearQRCode();
       });
       this.signClient.on('session_expire', async (payload) => {
-        this.logConsole('\nSession expire received');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('⏰ Session expire received\n' + JSON.stringify(payload, null, 2));
         console.log('Session expire', payload);
         this.sessionTopic = '';
         localStorage.removeItem('sessionTopic');
         this.clearQRCode();
       });
       this.signClient.on('session_request', async (payload) => {
-        this.logConsole('\nSession request received');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('📥 Session request received\n' + JSON.stringify(payload, null, 2));
         console.log('Session request', payload);
       });
       this.signClient.on('session_request_sent', async (payload) => {
-        this.logConsole('\nSession request sent');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('📤 Session request sent\n' + JSON.stringify(payload, null, 2));
         console.log('Session request sent', payload);
       });
       this.signClient.on('session_event', async (payload) => {
-        this.logConsole('\nSession event received');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('📡 Session event received\n' + JSON.stringify(payload, null, 2));
         console.log('Session event', payload);
       });
       this.signClient.on('session_authenticate', async (payload) => {
-        this.logConsole('\nSession authenticate received');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('🔐 Session authenticate received\n' + JSON.stringify(payload, null, 2));
         console.log('Session authenticate', payload);
       });
       this.signClient.on('proposal_expire', async (payload) => {
-        this.logConsole('\nProposal expire received');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('⏰ Proposal expire received\n' + JSON.stringify(payload, null, 2));
         console.log('Proposal expire', payload);
       });
       this.signClient.on('session_request_expire', async (payload) => {
-        this.logConsole('\nSession request expire received');
-        this.logConsole(JSON.stringify(payload));
+        this.logConsole('⏰ Session request expire received\n' + JSON.stringify(payload, null, 2));
         console.log('Session request expire', payload);
       });
 
       // Listen for relay connection events
       this.signClient.core.relayer.on('relayer_connect', () => {
         this.relayConnected = true;
-        this.logConsole('\n✓ Relay connected');
+        this.logConsole('✅ Relay connected');
         console.log('Relay connected');
       });
 
       this.signClient.core.relayer.on('relayer_disconnect', () => {
         this.relayConnected = false;
-        this.logConsole('\n✗ Relay disconnected');
+        this.logConsole('❌ Relay disconnected');
         console.log('Relay disconnected');
       });
 
       // Check initial relay connection state
       if (this.signClient.core.relayer.connected) {
         this.relayConnected = true;
-        this.logConsole('Relay already connected');
+        this.logConsole('✅ Relay already connected');
       }
     });
   }
