@@ -66,7 +66,7 @@
 
   .card h3 {
     margin: 0 0 4px 0;
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     color: var(--text-primary);
   }
 
@@ -417,19 +417,13 @@
 
       <!-- Request Accounts -->
       <div class="card">
-        <div class="card-header">
-          <h3>Request Accounts</h3>
-          <span class="method-label">qubic_requestAccounts</span>
-        </div>
+        <h3>Request Accounts <span class="method-label">(qubic_requestAccounts)</span></h3>
         <button (click)="requestAccounts()">Request Accounts</button>
       </div>
 
       <!-- Send Qubic -->
       <div class="card">
-        <div class="card-header">
-          <h3>Send Qubic</h3>
-          <span class="method-label">qubic_sendQubic</span>
-        </div>
+        <h3>Send Qubic <span class="method-label">(qubic_sendQubic)</span></h3>
         <div class="form-group">
           <label>From</label>
           <input type="text" [(ngModel)]="sendFrom" placeholder="Sender address" />
@@ -447,10 +441,7 @@
 
       <!-- Send Asset -->
       <div class="card">
-        <div class="card-header">
-          <h3>Send Asset</h3>
-          <span class="method-label">qubic_sendAsset</span>
-        </div>
+        <h3>Send Asset <span class="method-label">(qubic_sendAsset)</span></h3>
         <div class="form-group">
           <label>From</label>
           <input type="text" [(ngModel)]="sendFrom" placeholder="Sender address" />
@@ -476,10 +467,7 @@
 
       <!-- Sign Transaction -->
       <div class="card">
-        <div class="card-header">
-          <h3>Sign Transaction</h3>
-          <span class="method-label">qubic_signTransaction</span>
-        </div>
+        <h3>Sign Transaction <span class="method-label">(qubic_signTransaction)</span></h3>
         <div class="form-group">
           <label>From</label>
           <input type="text" [(ngModel)]="sendFrom" placeholder="Sender address" />
@@ -509,10 +497,7 @@
 
       <!-- Send Transaction -->
       <div class="card">
-        <div class="card-header">
-          <h3>Send Transaction</h3>
-          <span class="method-label">qubic_sendTransaction</span>
-        </div>
+        <h3>Send Transaction <span class="method-label">(qubic_sendTransaction)</span></h3>
         <div class="form-group">
           <label>From</label>
           <input type="text" [(ngModel)]="sendFrom" placeholder="Sender address" />
@@ -542,10 +527,7 @@
 
       <!-- Sign Message -->
       <div class="card">
-        <div class="card-header">
-          <h3>Sign Message</h3>
-          <span class="method-label">qubic_sign</span>
-        </div>
+        <h3>Sign Message <span class="method-label">(qubic_sign)</span></h3>
         <div class="form-group">
           <label>From</label>
           <input type="text" [(ngModel)]="sendFrom" placeholder="Signer address" />
