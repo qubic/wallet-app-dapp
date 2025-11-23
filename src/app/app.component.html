@@ -196,7 +196,8 @@
       <br />
       <br />
       <div style="display: flex; justify-content: center; align-items: center">
-        <input type="button" value="Copy URL" (click)="copyUrl()" style="align-self: center" />
+        <input type="button" value="Copy URL" (click)="copyUrl()" style="align-self: center"
+          [disabled]="this.connectionURL.length < 1" />
       </div>
       <small style="font-size: 10px" *ngIf="connectionURL !== ''">
         <br />
@@ -215,7 +216,7 @@
       <h2>Logout</h2>
       <div style="display: flex; justify-content: center; align-items: center">
 
-        <input type="button" value="Logout" (click)="logout()" />
+        <input type="button" value="Logout" (click)="logout()" [disabled]="sessionIsActive() === false" />
       </div> <br />
 
 

@@ -158,7 +158,7 @@ export class AppComponent {
 
   //Requests accounts from wallet
   public async requestAccounts() {
-    if (!this.checkSessionStatus()) {
+    if (!this.sessionIsActive()) {
       this.logConsole('Cannot request accounts. No active session.');
       return;
     }
@@ -303,9 +303,8 @@ export class AppComponent {
     }
   }
 
-  public checkSessionStatus(): boolean {
+  public sessionIsActive(): boolean {
     if (!this.sessionTopic) {
-      this.logConsole('No session topic is set.');
       return false;
     }
 
@@ -314,7 +313,6 @@ export class AppComponent {
       const expiryTimeMs = session.expiry * 1000;
       if (expiryTimeMs > Date.now()) {
         // Session is valid
-        this.logConsole('Session is still connected and valid.');
         return true;
       } else {
         // Session has expired
@@ -381,7 +379,7 @@ export class AppComponent {
 
       if (storedSessionTopic && sessions.length > 0) {
         // find the session with the stored topic
-        const session = sessions.find((s) => s.topic === storedSessionTopic);
+        const session = sessions.find((s: { topic: string; }) => s.topic === storedSessionTopic);
         if (session) {
           this.logConsole('Restored session from local storage');
           this.handleSessionConnected(session);
