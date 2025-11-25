@@ -303,7 +303,7 @@ export class AppComponent {
         topic: this.sessionTopic,
         chainId: this.chainId,
         request: {
-          method: 'qubic_sendQubics',
+          method: 'qubic_sendQubic',
           params: {
             from: this.sendFrom,
             to: this.sendTo,
