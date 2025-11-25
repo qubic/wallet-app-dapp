@@ -490,8 +490,8 @@ export class AppComponent {
       projectId: 'b2ace378845f0e4806ef23d2732f77a4',
       metadata: {
         name: 'TEST QUBIC DAPP',
-        description: 'A short and sweet description for your project',
-        url: 'https://yourdappurl.com',
+        description: 'A Qubic WalletConnect dApp Demo',
+        url: 'https://qubic.github.io/wallet-app-dapp/',
         icons: ['https://walletconnect.com/walletconnect-logo.png'],
       },
     }).then((value) => {
