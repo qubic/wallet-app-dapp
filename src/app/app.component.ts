@@ -586,6 +586,19 @@ export class AppComponent {
         this.relayConnected = true;
         this.logConsole('✅ Relay already connected');
       }
+
+      // Mobile browsers suspend WebSocket connections when the tab is in the
+      // background. When the user returns to the tab, force the relay to
+      // reconnect so any pending session messages (e.g. session_settle from
+      // wallet approvals) are delivered without delay.
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && this.signClient && !this.signClient.core.relayer.connected) {
+          this.logConsole('👁️ Tab visible — reconnecting relay');
+          this.signClient.core.relayer.transportOpen().catch((err: unknown) => {
+            console.error('Failed to reopen relay transport', err);
+          });
+        }
+      });
     });
   }
 }
