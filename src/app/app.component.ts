@@ -100,14 +100,37 @@ export class AppComponent {
   };
 
   public copyToClipboard(content: string) {
-    navigator.clipboard
-      .writeText(content)
-      .then(() => {
-        console.log('Content copied to clipboard');
-      })
-      .catch((err) => {
-        console.error('Failed to copy content: ', err);
-      });
+    // navigator.clipboard requires a secure context (HTTPS or localhost).
+    // Fall back to the legacy textarea+execCommand approach when unavailable
+    // (e.g. testing over plain HTTP on a local network IP).
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard
+        .writeText(content)
+        .then(() => console.log('Content copied to clipboard'))
+        .catch((err) => {
+          console.error('Failed to copy content: ', err);
+          this.legacyCopy(content);
+        });
+    } else {
+      this.legacyCopy(content);
+    }
+  }
+
+  private legacyCopy(content: string) {
+    const textarea = document.createElement('textarea');
+    textarea.value = content;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      console.log('Content copied via legacy fallback');
+    } catch (err) {
+      console.error('Legacy copy failed: ', err);
+    }
+    document.body.removeChild(textarea);
   }
 
   public copyUrl() {
@@ -224,6 +247,18 @@ export class AppComponent {
     return `${minutes}m`;
   }
 
+  // Foreground the wallet on mobile so its relay socket reconnects and picks
+  // up the pending request. Desktop browsers are skipped because the scheme
+  // handler prompt is noisy and unnecessary there.
+  private openWalletApp(): void {
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (!isMobile) return;
+
+    const session = this.signClient?.session.get(this.sessionTopic);
+    const native = session?.peer?.metadata?.redirect?.native ?? 'qubic-wallet://';
+    window.location.href = native;
+  }
+
   private handleError(error: unknown): void {
     // Extract the calling method name from the stack trace
     let callerName = 'unknown';
@@ -276,7 +311,7 @@ export class AppComponent {
       return;
     }
     try {
-      const result = await this.signClient.request({
+      const pending = this.signClient.request({
         topic: this.sessionTopic,
         chainId: this.chainId,
         request: {
@@ -289,6 +324,8 @@ export class AppComponent {
           },
         },
       });
+      this.openWalletApp();
+      const result = await pending;
       this.logConsole('📋 qubic_requestAccounts response\n' + JSON.stringify(result, null, 2));
       console.log(result);
     } catch (e) {
@@ -299,7 +336,7 @@ export class AppComponent {
   //Requests accounts from wallet
   public async sendQubic() {
     try {
-      const result = await this.signClient.request({
+      const pending = this.signClient.request({
         topic: this.sessionTopic,
         chainId: this.chainId,
         request: {
@@ -312,6 +349,8 @@ export class AppComponent {
           },
         },
       });
+      this.openWalletApp();
+      const result = await pending;
       this.logConsole('📄 Result\n' + JSON.stringify(result, null, 2));
     } catch (e) {
       this.handleError(e);
@@ -320,7 +359,7 @@ export class AppComponent {
 
   public async sendAsset() {
     try {
-      const result = await this.signClient.request({
+      const pending = this.signClient.request({
         topic: this.sessionTopic,
         chainId: this.chainId,
         request: {
@@ -335,6 +374,8 @@ export class AppComponent {
           },
         },
       });
+      this.openWalletApp();
+      const result = await pending;
       this.logConsole('📄 Result\n' + JSON.stringify(result, null, 2));
     } catch (e) {
       this.handleError(e);
@@ -344,7 +385,7 @@ export class AppComponent {
   //Requests accounts from wallet
   public async signTransaction() {
     try {
-      const result = await this.signClient.request({
+      const pending = this.signClient.request({
         topic: this.sessionTopic,
         chainId: this.chainId,
         request: {
@@ -360,6 +401,8 @@ export class AppComponent {
           },
         },
       });
+      this.openWalletApp();
+      const result = await pending;
       this.logConsole('📄 Result\n' + JSON.stringify(result, null, 2));
     } catch (e) {
       this.handleError(e);
@@ -368,7 +411,7 @@ export class AppComponent {
 
   public async sendTransaction() {
     try {
-      const result = await this.signClient.request({
+      const pending = this.signClient.request({
         topic: this.sessionTopic,
         chainId: this.chainId,
         request: {
@@ -384,6 +427,8 @@ export class AppComponent {
           },
         },
       });
+      this.openWalletApp();
+      const result = await pending;
       this.logConsole('📄 Result\n' + JSON.stringify(result, null, 2));
     } catch (e) {
       this.handleError(e);
@@ -393,7 +438,7 @@ export class AppComponent {
   //Requests accounts from wallet
   public async signMessage() {
     try {
-      const result = await this.signClient.request({
+      const pending = this.signClient.request({
         topic: this.sessionTopic,
         chainId: this.chainId,
         request: {
@@ -404,6 +449,8 @@ export class AppComponent {
           },
         },
       });
+      this.openWalletApp();
+      const result = await pending;
       this.logConsole('📄 Result\n' + JSON.stringify(result, null, 2));
     } catch (e) {
       this.handleError(e);
@@ -590,13 +637,27 @@ export class AppComponent {
       // Mobile browsers suspend WebSocket connections when the tab is in the
       // background. When the user returns to the tab, force the relay to
       // reconnect so any pending session messages (e.g. session_settle from
-      // wallet approvals) are delivered without delay.
+      // wallet approvals) are delivered without delay. Also check if a new
+      // session was created in storage while we were away — the approval()
+      // promise may not resolve if the message was missed.
       document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && this.signClient && !this.signClient.core.relayer.connected) {
+        if (document.hidden || !this.signClient) return;
+
+        if (!this.signClient.core.relayer.connected) {
           this.logConsole('👁️ Tab visible — reconnecting relay');
           this.signClient.core.relayer.transportOpen().catch((err: unknown) => {
             console.error('Failed to reopen relay transport', err);
           });
+        }
+
+        // Detect sessions that were created while the tab was hidden.
+        if (!this.sessionTopic) {
+          const sessions = this.signClient.session.getAll();
+          if (sessions.length > 0) {
+            const latest = sessions[sessions.length - 1];
+            this.logConsole('👁️ Tab visible — found active session in storage');
+            this.handleSessionConnected(latest);
+          }
         }
       });
     });
