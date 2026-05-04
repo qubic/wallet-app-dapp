@@ -26,6 +26,7 @@ export class AppComponent {
 
   connectionURL = '';
   connectionDeepLink = '';
+  isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   sessionTopic = '';
   sessionExpiry: number | null = null;
   relayConnected = false;
@@ -147,6 +148,12 @@ export class AppComponent {
     setTimeout(() => {
       this.deepLinkCopied = false;
     }, this.COPIED_MESSAGE_DURATION);
+  }
+
+
+  public openWalletForPairing() {
+    if (!this.connectionDeepLink) return;
+    window.location.href = this.connectionDeepLink;
   }
 
   public copyConsoleText() {

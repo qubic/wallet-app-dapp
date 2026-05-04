@@ -391,6 +391,17 @@
             <img id="qrCodeImage" alt="QR Code" />
             <p class="qr-instruction">Scan the QR code with your Qubic Wallet to approve</p>
           </div>
+
+          <!-- Same-device shortcut: on mobile, let the user open the wallet
+               with one tap instead of copy-pasting the deep link. -->
+          <button
+            *ngIf="isMobile && connectionDeepLink"
+            (click)="openWalletForPairing()"
+            class="copy-btn"
+            style="margin-top: 12px; width: 100%;">
+            Open in Qubic Wallet
+          </button>
+
           <div class="qr-details">
             <div class="connection-string-group">
               <label>WalletConnect URI</label>
