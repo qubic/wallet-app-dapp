@@ -255,7 +255,7 @@ export class AppComponent {
     if (!isMobile) return;
 
     const session = this.signClient?.session.get(this.sessionTopic);
-    const native = session?.peer?.metadata?.redirect?.native ?? 'qubic-wallet://';
+    const native = session?.peer?.metadata?.redirect?.native ?? 'qubic-wallet://open';
     window.location.href = native;
   }
 
